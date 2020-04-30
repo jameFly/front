@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: "/",
-    redirect: "dishManagement",
+    redirect: "login",
     component: () => import("@/layout/index.vue"),
     children: [
       {
@@ -52,6 +52,13 @@ const routes = [
         component: () => import("@/views/foodConflict")
       }
     ]
+  },
+  {
+    path: "/login",
+    meta: {
+      title: "登录"
+    },
+    component: () => import("@/views/login")
   },
 ]
 

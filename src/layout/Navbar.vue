@@ -37,6 +37,9 @@ export default {
         case "5":
           this.$router.push({ path: "/foodConflict" }).catch(err => {});
           break;
+        case "6":
+          this.$router.push({ path: "/login" }).catch(err => {});
+          break;
       }
     }
   },
@@ -66,6 +69,10 @@ export default {
         {
           index: "5",
           title: "食物冲突"
+        },
+        {
+          index: "6",
+          title: "登出"
         }
       ],
       activeIndex: "0"
