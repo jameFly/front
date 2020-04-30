@@ -17,7 +17,11 @@
             login() {
                 const loginFormData = {...this.loginFormData};
                 console.log(loginFormData);
-                setTimeout(() => {location.href = '/dishManagement'}, 5000)
+                if (loginFormData.username && loginFormData.password) {
+                    setTimeout(() => {location.href = '/dishManagement'}, 5000)
+                } else {
+                    this.$message.error("用户名或密码不能为空！");
+                }
                 /*foodAPI.getFoodList(params).then(res => {
                     if (res.data.status == 0) {
                         console.log(res);
