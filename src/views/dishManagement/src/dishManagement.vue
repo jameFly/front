@@ -246,7 +246,7 @@ export default {
       this.addModalData = {};
       this.addCustomData = [];
       this.$nextTick(() => {
-        this.$children[2].$refs[this.formRef].resetFields();
+        this.$children[2].$refs[this.formRef].clearValidate(["seasons"]);
       });
     },
     handleEditClick(index, row) {
