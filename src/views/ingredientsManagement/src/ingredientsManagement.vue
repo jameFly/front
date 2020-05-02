@@ -1,5 +1,6 @@
 <template>
   <div class="ingredientsManagement">
+    我是食材管理
     <baseSearch :searchData="searchData" :modelSearch="modelSearch" :searchWidth="searchWidth" />
     <baseTable
             :topButtonList="topButtonList"
