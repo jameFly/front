@@ -38,6 +38,19 @@ export default {
             ></el-input>
           </div>
         );
+      }else if (item.type === "inputNumber") {
+          return (
+              <div class="searchInput" style={{width: searchWidth + "px"}}>
+                  <span domPropsInnerHTML={label}></span>
+                  <el-input-number
+                      class="input-number"
+                      v-model={modelSearch[prop]}
+                      placeholder={placeholder}
+                      min={0}
+                      controls-position="right"
+                  ></el-input-number>
+              </div>
+          );
       } else if (item.type === "button" && item.label == "查询") {
         return (
           <div class="searchBtn" on-click={e => handleClick(e)}>
@@ -56,7 +69,7 @@ export default {
         return (
           <div class="searchInput" style={{ width: searchWidth + "px" }}>
             <span domPropsInnerHTML={label}></span>
-            <el-select v-model={modelSearch[prop]} multiple={item.multiple}>
+            <el-select v-model={modelSearch[prop]} multiple={item.multiple} placeholder={placeholder}>
               {item.options.length &&
                 item.options.map(item => {
                   return (
@@ -103,6 +116,15 @@ export default {
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
     }
+      .input-number {
+          width: 100%;
+          .el-input {
+              input {
+                  height: 39px;
+                  text-align: left;
+              }
+          }
+      }
   }
   .searchBtn {
     margin-right: 20px;

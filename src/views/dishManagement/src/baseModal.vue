@@ -37,6 +37,7 @@ export default {
     renderFormItem(item) {
       const { addModalData, searchWidth } = this;
       const {
+        id,
         type,
         label,
         prop,
@@ -47,6 +48,7 @@ export default {
         options,
         icon
       } = item;
+      let isDisabled = (prop === 'weight' || prop === 'seasons' ) && true;
       if (item.type === "input") {
         return (
           <el-form-item label={label} hidden={hidden} prop={prop}>
@@ -64,6 +66,7 @@ export default {
               v-model={addModalData[prop]}
               placeholder={placeholder}
               min={0}
+              disabled={isDisabled}
               controls-position="right"
             ></el-input-number>
           </el-form-item>
@@ -104,6 +107,7 @@ export default {
               v-model={addModalData[prop]}
               multiple={true}
               placeholder={placeholder}
+              disabled={isDisabled}
             >
               {item.options.length &&
                 item.options.map(item => {
@@ -154,7 +158,6 @@ export default {
               placeholder={"请输入"}
               controls-position="right"
               min={0}
-              max={100}
               on-blur={e => onValueChange(e.target.value, index, "components")}
             ></el-input-number>
           </el-col>
