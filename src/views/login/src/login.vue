@@ -18,23 +18,18 @@
                 const loginFormData = {...this.loginFormData};
                 console.log(loginFormData);
                 if (loginFormData.username && loginFormData.password) {
-                    setTimeout(() => {location.href = '/dishManagement'}, 5000)
+                    /*foodAPI.getFoodList(params).then(res => {
+                    if (res.data.status == 0) {
+                            setTimeout(() => {location.href = '/dishManagement'}, 1000)
+                        })
+                    }
+                    }).catch(err => {
+                        console.log(err)
+                    })*/
+                    setTimeout(() => {location.href = '/dishManagement'}, 1000)
                 } else {
                     this.$message.error("用户名或密码不能为空！");
                 }
-                /*foodAPI.getFoodList(params).then(res => {
-                    if (res.data.status == 0) {
-                        console.log(res);
-                        this.tableData = res.data.data.rows;
-                        this.tableData.forEach(ele => {
-                            console.log(ele);
-                            ele["material"] = ele["materialNames"].join(",")
-                            ele["nutrient"] = ele["nutrientNames"].join(",")
-                        })
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })*/
             },
         },
         render(h){
