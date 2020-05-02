@@ -53,7 +53,7 @@ export default {
           );
       } else if (item.type === "button" && item.label == "查询") {
         return (
-          <div class="searchBtn" on-click={e => handleClick(e)}>
+          <div class="searchBtn mr16" on-click={e => handleClick(e)}>
             <i class={icon}></i>
             <span>{label}</span>
           </div>
@@ -126,8 +126,10 @@ export default {
           }
       }
   }
+  .mr16{
+      margin-right: 16px;
+  }
   .searchBtn {
-    margin-right: 20px;
     width: 64px;
     height: 32px;
     line-height: 32px;

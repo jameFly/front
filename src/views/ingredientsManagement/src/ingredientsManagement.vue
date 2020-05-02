@@ -33,6 +33,7 @@ import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
 import { reNull } from "@/utils/common.js";
+import { materialAPI } from "@/api/material"
 export default {
     name: "ingredientsManagement",
     components: {
@@ -44,16 +45,34 @@ export default {
         return{
             searchData: [
                 {
-                    label: "菜品名称",
+                    label: "食材名称",
                     type: "input",
-                    prop: "foodName"
+                    prop: "materialName"
                 },
                 {
-                    label: "食材",
+                    label: "时令",
                     type: "select",
-                    prop: "materialIds",
-                    options: [],
+                    prop: "seasons",
+                    options: [
+                        { value: "01", label: "一月" },
+                        { value: "02", label: "二月" },
+                        { value: "03", label: "三月" },
+                        { value: "04", label: "四月" },
+                        { value: "05", label: "五月" },
+                        { value: "06", label: "六月" },
+                        { value: "07", label: "七月" },
+                        { value: "08", label: "八月" },
+                        { value: "09", label: "九月" },
+                        { value: "10", label: "十月" },
+                        { value: "11", label: "十一月" },
+                        { value: "12", label: "十二月" },
+                    ],
                     multiple: true
+                },
+                {
+                    label: "食材类型",
+                    type: "input",
+                    prop: "materialType"
                 },
                 {
                     label: "查询",
@@ -70,8 +89,13 @@ export default {
             ],
             tableHeaders: [
                 {
-                    label: "菜品名称",
-                    prop: "foodName",
+                    label: "食材名称",
+                    prop: "materialName",
+                    align: "center"
+                },
+                {
+                    label: "食材类型",
+                    prop: "materialType",
                     align: "center"
                 },
                 {
@@ -80,18 +104,8 @@ export default {
                     align: "center"
                 },
                 {
-                    label: "克重",
-                    prop: "weight",
-                    align: "center"
-                },
-                {
                     label: "价格(元)",
                     prop: "price",
-                    align: "center"
-                },
-                {
-                    label: "食材",
-                    prop: "material",
                     align: "center"
                 },
                 {
@@ -111,10 +125,6 @@ export default {
                         {
                             name: "删除",
                             handleClick: this.handleDelClick
-                        },
-                        {
-                            name: "收藏",
-                            handleClick: this.handleColClick
                         }
                     ]
                 }
@@ -183,14 +193,7 @@ export default {
                     placeholder: "请输入描述"
                 }
             ],
-            addModalData: {
-                id: 1,
-                foodName: "蔬菜",
-                seasons: [1, 2, 3],
-                price: 20.2,
-                weight: 30,
-                remark: "好"
-            },
+            addModalData: {},
             isCustomAdd: true,
             addCustomData: [
                 {
@@ -294,26 +297,33 @@ export default {
             this.addCustomData[index][name] = value;
             this.disabledOpt();
         },
-        getList() {
-            this.modelSearch["materialIds"] = this.modelSearch["materialIds"].length
-                ? this.modelSearch["materialIds"].join(",")
-                : "";
+        getList(page, size) {
+            let modelSearch = {
+                ...this.modelSearch,
+                seasons:this.modelSearch["seasons"].length
+                    ? this.modelSearch["seasons"].join(",")
+                    : "",
+            };
             let params = {
-                page: 1,
-                rows: 5,
-                ...this.modelSearch
+                page: page || 1,
+                rows: size || 10,
+                ...modelSearch
             };
             console.log(params);
-            /*foodAPI.getFoodList(reNull(params)).then(res => {
+            materialAPI.getMaterialList(reNull(params)).then(res => {
                 if (res.data.status == 0) {
                     this.tableData = res.data.data.rows;
+                    this.total = res.data.data.total;
                     this.tableData.forEach(ele => {
-                        console.log(ele);
-                        ele["material"] = ele["materialNames"].join(",");
-                        ele["nutrient"] = ele["nutrientNames"].join(",");
+                        console.log(111,ele);
+                        let nutrient = [];
+                        ele["componentTos"].map(item => {
+                            nutrient.push(item.typeName)
+                        });
+                        ele["nutrient"] = nutrient.length ? nutrient.join(',') : ''
                     });
                 }
-            });*/
+            });
         },
         getMaterialIdList() {
             // 获取食材下拉框

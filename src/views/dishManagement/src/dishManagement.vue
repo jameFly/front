@@ -32,7 +32,7 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
-import { materialAPI } from "@/api/material"
+import { materialAPI } from "@/api/material";
 import { foodAPI } from "@/api/food";
 import { reNull } from "@/utils/common.js";
 export default {
