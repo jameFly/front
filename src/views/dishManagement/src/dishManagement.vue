@@ -250,15 +250,14 @@ export default {
     },
     handleEditClick(index, row) {
       console.log("编辑", index, row);
-      this.modalTitle = "编辑菜品";
-      this.dialogVisible = true;
+        this.modalTitle = "编辑菜品";
         this.addModalData = {};
         this.addCustomData = [];
         foodAPI.getFoodInfo(reNull({id: row.id})).then(res => {
             console.log('res',res);
             if (res.data.status == 0) {
                 let data = res.data.data;
-                data.seasons = res.data.data.seasons.length ?  res.data.data.seasons.split(',') : [];
+                data.seasons = res.data.data.seasons ?  res.data.data.seasons.split(',') : [];
                 this.addModalData = data;
                 let componentTos = data.componentTos;
                 componentTos.map(item => {
@@ -266,7 +265,8 @@ export default {
                         nutrientName: item.typeId,
                         components: item.weight
                     })
-                })
+                });
+                this.dialogVisible = true;
             } else {
                 if (res.data.errorCode) {
                     this.$message.error(res.data.errorCode);
@@ -319,7 +319,7 @@ export default {
       console.log(val);
       this.getList(val, this.pageSize, "handlepageChange");
     },
-    handleAddModalData(fields) {
+    handleAddModalData() {
       //保存
       let addModalData = { ...this.addModalData };
       let addCustomData = [ ...this.addCustomData ];
@@ -357,7 +357,7 @@ export default {
                 console.log('err',err)
             })
           } else {
-            this.$message.error("食材含量不能为空!");
+            this.$message.error("食材及含量不能为空!");
           }
         }
       });
@@ -463,11 +463,11 @@ export default {
       });
     },
     inputRule() {
-      let res = true;
+      let res = false;
       if (this.addCustomData && this.addCustomData.length) {
         for (let i = 0; i < this.addCustomData.length; i++) {
-          if (!this.addCustomData[i].components) {
-            res = false;
+          if (this.addCustomData[i].components && this.addCustomData[i].nutrientName) {
+            res = true;
             break;
           }
         }
