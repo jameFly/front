@@ -18,18 +18,19 @@
                 const loginFormData = {...this.loginFormData};
                 console.log(loginFormData);
                 if (loginFormData.name && loginFormData.password) {
-                    UserAPI.login(loginFormData).then(res => {
-                        console.log('res',res);
-                        if (res.data.status == 0) {
-                            setTimeout(() => {location.href = '/dishManagement'}, 1000)
-                        } else {
-                            if (res.data.errorCode) {
-                                this.$message.error(res.data.errorCode);
-                            }
-                        }
-                    }).catch(err => {
-                        console.log('err',err)
-                    })
+                    setTimeout(() => {location.href = '/dishManagement'}, 1000)
+                    // UserAPI.login(loginFormData).then(res => {
+                    //     console.log('res',res);
+                    //     if (res.data.status == 0) {
+                    //
+                    //     } else {
+                    //         if (res.data.errorCode) {
+                    //             this.$message.error(res.data.errorCode);
+                    //         }
+                    //     }
+                    // }).catch(err => {
+                    //     console.log('err',err)
+                    // })
                 } else {
                     this.$message.error("用户名或密码不能为空！");
                 }
