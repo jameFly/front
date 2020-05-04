@@ -44,6 +44,14 @@ export const materialAPI = {
             url:baseUrl + '/nutritional/nutrient_pull_down_list',
             method:"get",
         })
+    },
+
+    getMaterialChart(params){ // 食材的营养含量饼状图图
+        return axios({
+            url:baseUrl + '/material/material_chart',
+            method:"get",
+            params
+        })
     }
 
 };

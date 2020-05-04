@@ -50,6 +50,14 @@ export const foodAPI = {
             url:baseUrl + '/material/material_pull_down_list',
             method:"get",
         })
+    },
+
+    getFoodChart(params){ // 菜品的食材含量柱状图，营养含量饼状图(返回的是个长度为2的列表，第一个是柱状图，第二个是饼状图)
+        return axios({
+            url:baseUrl + '/food/food_chart',
+            method:"get",
+            params
+        })
     }
 
 };
