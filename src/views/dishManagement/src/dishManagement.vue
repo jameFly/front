@@ -25,6 +25,16 @@
       @reduceAddCustomDataList="reduceAddCustomDataList"
       @onValueChange="onValueChange"
     />
+    <showCollection
+            :tableHeaders="collectHeaders"
+            :tableData="collectTableData"
+            :total="collectTotal"
+            :title="collectTitle"
+            :dialogVisible="isShowCollection"
+            @sizeChange="handleCollectSizeChange"
+            @pageChange="handleCollectPageChange"
+            @handleCancelChange="handleCancelChange"
+    />
   </div>
 </template>
 
@@ -32,15 +42,18 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
+import showCollection from './showCollection'
 import { materialAPI } from "@/api/material";
 import { foodAPI } from "@/api/food";
+import { foodCollectAPI } from "@/api/foodCollect";
 import { reNull } from "@/utils/common.js";
 export default {
   name: "dishManagement",
   components: {
     baseSearch,
     baseTable,
-    baseModal
+    baseModal,
+    showCollection
   },
   data() {
     return {
@@ -148,11 +161,16 @@ export default {
         {
           name: "新增",
           handleClick: this.handleAddClick
+        },
+        {
+          name: "查看收藏",
+          handleClick: this.showCollection
         }
       ],
       modelSearch: {},
       total: 0, //数据总条数
       searchWidth: 360,
+
       modalTitle: "新增菜品",
       dialogVisible: false,
       addData: [
@@ -217,16 +235,58 @@ export default {
       materialNameList: [],
       currentPage: 1,
       pageSize: 10,
-      rules: {
-        /*foodName: [{ required: true, message: '请输入菜品名称'},
-                        { max: 20, message: '长度不超过20个字符'}],
-                    seasons: [{ required: true, message: '请输入时令', trigger: 'change'}],
-                    price: [{ required: true, message: '请输入菜品价格'}],
-                    weight: [{ required: true, message: '请输入菜品克重'}],
-                    remark: [{ required: false}],*/
-      },
       isRules: true,
-      formRef: "baseForm"
+      formRef: "baseForm",
+
+      isShowCollection: false,
+      collectTitle: "我的收藏",
+      collectHeaders:[
+          {
+              label: "菜品名称",
+              prop: "foodName",
+              align: "center"
+          },
+          {
+              label: "时令(月)",
+              prop: "seasons",
+              align: "center"
+          },
+          {
+              label: "克重",
+              prop: "weight",
+              align: "center"
+          },
+          {
+              label: "价格(元)",
+              prop: "price",
+              align: "center"
+          },
+          {
+              label: "食材",
+              prop: "material",
+              align: "center"
+          },
+          {
+              label: "营养成分",
+              prop: "nutrient",
+              align: "center"
+          },
+
+          {
+              label: "操作",
+              align: "center",
+              buttonList: [
+                  {
+                      name: "取消收藏",
+                      handleClick: this.cancelCollect
+                  }
+              ]
+          }
+      ],
+      collectTotal: 0,
+      collectTableData:[],
+      collectCurrentPage: 1,
+      collectPageSize: 10,
     };
   },
   methods: {
@@ -282,7 +342,7 @@ export default {
             console.log('res',res);
             if (res.data.status == 0) {
                 this.$message.success("删除成功！");
-                this.getList();
+                this.getList(this.currentPage, this.pageSize);
             } else {
                 if (res.data.errorCode) {
                     this.$message.error(res.data.errorCode);
@@ -294,12 +354,11 @@ export default {
     },
     handleColClick(index, row) {
       console.log("收藏", index, row);
-      row.isCollect = false;
-        foodAPI.collectFood(reNull({ids: row.id, status: !row.isCollect})).then(res => {
+        foodAPI.collectFood(reNull({ids: row.id, status: true})).then(res => {
             console.log('res',res);
             if (res.data.status == 0) {
                 this.$message.success("收藏成功！");
-                this.getList();
+                this.getList(this.currentPage, this.pageSize);
             } else {
                 if (res.data.errorCode) {
                     this.$message.error(res.data.errorCode);
@@ -334,8 +393,7 @@ export default {
                       weight: item.components
                   })
             });
-            delete addModalData.seasons;
-            delete addModalData.weight;
+
             addModalData = {
                 ...addModalData,
                 componentTos
@@ -379,6 +437,23 @@ export default {
       this.addCustomData[index][name] = value;
       this.disabledOpt();
     },
+    showCollection() {
+        this.isShowCollection = true;
+        this.getCollectionList()
+    },
+    handleCancelChange() {
+        this.isShowCollection = false
+    },
+    handleCollectSizeChange(val) {
+        this.collectPageSize = val;
+        console.log(val);
+        this.getCollectionList(this.collectCurrentPage, val, "handlesizeChange");
+    },
+    handleCollectPageChange(val) {
+        this.collectCurrentPage = val;
+        console.log(val);
+        this.getCollectionList(val, this.collectPageSize, "handlepageChange");
+    },
     getList(page, size) {
       let modelSearch = {
           ...this.modelSearch,
@@ -411,6 +486,39 @@ export default {
           });
         }
       });
+    },
+    getCollectionList(page, size){
+        let params = {
+            page: page || 1,
+            rows: size || 10,
+        };
+        foodCollectAPI.getCollectList(reNull(params)).then(res => {
+            if (res.data.status == 0) {
+                this.collectTableData = res.data.data.rows;
+                this.collectTotal = res.data.data.total;
+                this.collectTableData.forEach(ele => {
+                    console.log(ele);
+                    ele["material"] = ele["materialNames"].join(",");
+                    ele["nutrient"] = ele["nutrientNames"].join(",");
+                });
+            }
+        });
+    },
+    cancelCollect(index, row) {
+        console.log("取消收藏");
+        foodAPI.collectFood(reNull({ids: row.id, status: false})).then(res => {
+            console.log('res',res);
+            if (res.data.status == 0) {
+                this.$message.success("取消收藏成功！");
+                this.getCollectionList(this.collectCurrentPage, this.collectPageSize);
+            } else {
+                if (res.data.errorCode) {
+                    this.$message.error(res.data.errorCode);
+                }
+            }
+        }).catch(err => {
+            console.log('err',err)
+        })
     },
     getMaterialIdList() {
       // 获取食材下拉框

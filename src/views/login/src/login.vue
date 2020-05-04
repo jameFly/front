@@ -18,6 +18,7 @@
                 const loginFormData = {...this.loginFormData};
                 console.log(loginFormData);
                 if (loginFormData.name && loginFormData.password) {
+                    //setTimeout(() => {location.href = '/dishManagement'}, 1000)
                     UserAPI.login(loginFormData).then(res => {
                         console.log('res',res);
                         if (res.data.status == 0) {
