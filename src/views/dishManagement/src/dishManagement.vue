@@ -28,7 +28,7 @@
     <showCollection
             :tableHeaders="collectHeaders"
             :tableData="collectTableData"
-            :total="total"
+            :total="collectTotal"
             :title="collectTitle"
             :dialogVisible="isShowCollection"
             @sizeChange="handleCollectSizeChange"
@@ -283,6 +283,7 @@ export default {
               ]
           }
       ],
+      collectTotal: 0,
       collectTableData:[],
       collectCurrentPage: 1,
       collectPageSize: 10,
@@ -341,7 +342,7 @@ export default {
             console.log('res',res);
             if (res.data.status == 0) {
                 this.$message.success("删除成功！");
-                this.getList();
+                this.getList(this.currentPage, this.pageSize);
             } else {
                 if (res.data.errorCode) {
                     this.$message.error(res.data.errorCode);
@@ -357,7 +358,7 @@ export default {
             console.log('res',res);
             if (res.data.status == 0) {
                 this.$message.success("收藏成功！");
-                this.getList();
+                this.getList(this.currentPage, this.pageSize);
             } else {
                 if (res.data.errorCode) {
                     this.$message.error(res.data.errorCode);
@@ -493,9 +494,9 @@ export default {
         };
         foodCollectAPI.getCollectList(reNull(params)).then(res => {
             if (res.data.status == 0) {
-                this.tableData = res.data.data.rows;
-                this.total = res.data.data.total;
-                this.tableData.forEach(ele => {
+                this.collectTableData = res.data.data.rows;
+                this.collectTotal = res.data.data.total;
+                this.collectTableData.forEach(ele => {
                     console.log(ele);
                     ele["material"] = ele["materialNames"].join(",");
                     ele["nutrient"] = ele["nutrientNames"].join(",");
@@ -509,7 +510,7 @@ export default {
             console.log('res',res);
             if (res.data.status == 0) {
                 this.$message.success("取消收藏成功！");
-                this.getList();
+                this.getCollectionList(this.collectCurrentPage, this.collectPageSize);
             } else {
                 if (res.data.errorCode) {
                     this.$message.error(res.data.errorCode);

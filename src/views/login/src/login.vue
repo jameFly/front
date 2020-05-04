@@ -22,7 +22,7 @@
                     UserAPI.login(loginFormData).then(res => {
                         console.log('res',res);
                         if (res.data.status == 0) {
-
+                            setTimeout(() => {location.href = '/dishManagement'}, 1000)
                         } else {
                             if (res.data.errorCode) {
                                 this.$message.error(res.data.errorCode);

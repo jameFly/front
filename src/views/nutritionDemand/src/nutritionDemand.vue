@@ -25,6 +25,17 @@
             @reduceAddCustomDataList="reduceAddCustomDataList"
             @onValueChange="onValueChange"
     />
+    <showDetail
+            :tableHeaders="detailHeaders"
+            :tableData="detailTableData"
+            :total="detailTotal"
+            :title="detailTitle"
+            :dialogVisible="isShowDetail"
+            @sizeChange="handleDetailSizeChange"
+            @pageChange="handleDetailPageChange"
+            @handleCancelChange="handleDetailChange"
+    />
+
   </div>
 </template>
 
@@ -32,6 +43,7 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
+import showDetail from "./showDetail"
 import { nutritionalNeedAPI } from "@/api/nutritionNeed";
 import { materialAPI } from "@/api/material";
 import { reNull } from "@/utils/common.js";
@@ -40,7 +52,8 @@ export default {
     components: {
         baseSearch,
         baseTable,
-        baseModal
+        baseModal,
+        showDetail
     },
     data(){
         return{
@@ -91,11 +104,21 @@ export default {
                         {
                             name: "删除",
                             handleClick: this.handleDelClick
+                        },
+                        {
+                            name: "详情",
+                            handleClick: this.handleDetailClick
                         }
                     ]
                 }
             ],
-            tableData: [],
+            tableData: [{
+                id: 1,
+                name: "lalala"
+            },{
+                id: 2,
+                name: "lalala"
+            }],
             topButtonList: [
                 {
                     name: "新增",
@@ -139,7 +162,26 @@ export default {
             pageSize: 10,
 
             isRules: true,
-            formRef: "baseForm"
+            formRef: "baseForm",
+
+            isShowDetail: false,
+            detailTitle: "详情",
+            detailHeaders:[
+                {
+                    label: "菜品名称",
+                    prop: "foodName",
+                    align: "center"
+                },
+                {
+                    label: "需求克重",
+                    prop: "needWeight",
+                    align: "center"
+                }
+            ],
+            detailTotal: 0,
+            detailTableData:[],
+            detailCurrentPage: 1,
+            detailPageSize: 10,
         }
     },
     methods: {
@@ -194,7 +236,7 @@ export default {
                 console.log('res',res);
                 if (res.data.status == 0) {
                     this.$message.success("删除成功！");
-                    this.getList();
+                    this.getList(this.currentPage, this.pageSize);
                 } else {
                     if (res.data.errorCode) {
                         this.$message.error(res.data.errorCode);
@@ -207,6 +249,47 @@ export default {
         // handleColClick(index, row) {
         //     console.log("收藏", index, row);
         // },
+        handleDetailChange() {
+            this.isShowDetail = false;
+            this.detailCurrentPage = 1;
+            this.detailPageSize = 10;
+        },
+        handleDetailSizeChange(val) {
+            this.detailPageSize = val;
+            let page = this.detailCurrentPage;
+            let size = val;
+            console.log(val);
+            this.handleDetailClick(page, size);
+        },
+        handleDetailPageChange(val) {
+            this.detailCurrentPage = val;
+            console.log(val);
+            let page = val;
+            let size = this.detailPageSize;
+            this.handleDetailClick(page, size);
+        },
+        handleDetailClick(index ,row, page, size){
+            console.log("详情", index, row);
+            let params = {
+                id: row.id,
+                page: page || 1,
+                size: size || 10
+            };
+            nutritionalNeedAPI.getNeedFoods(reNull(params)).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    this.detailTableData = res.data.data.rows;
+                    this.detailTotal = res.data.data.total;
+                    this.isShowDetail = true;
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
+        },
         handlesizeChange(val) {
             this.pageSize = val;
             console.log(val);
@@ -285,7 +368,6 @@ export default {
                 rows: size || 10,
                 ...modelSearch
             };
-            console.log(params);
             nutritionalNeedAPI.getNeedList(reNull(params)).then(res => {
                 if (res.data.status == 0) {
                     this.tableData = res.data.data.rows;

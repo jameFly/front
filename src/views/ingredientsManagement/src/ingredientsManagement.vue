@@ -283,7 +283,7 @@ export default {
                 console.log('res',res);
                 if (res.data.status == 0) {
                     this.$message.success("删除成功！");
-                    this.getList();
+                    this.getList(this.currentPage, this.pageSize);
                 } else {
                     if (res.data.errorCode) {
                         this.$message.error(res.data.errorCode);

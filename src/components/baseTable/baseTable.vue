@@ -88,7 +88,7 @@ export default {
     hasIndex: {
       // 是否需要多选框
       type: Boolean,
-      default: false
+      default: true
     },
     handleIndex: {
       // 处理多选框序号
