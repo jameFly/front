@@ -155,67 +155,66 @@
                 console.log("编辑", index, row);
                 this.modalTitle = "编辑食物";
                 this.addModalData = {};
-                // materialAPI.getMaterialInfo(reNull({id: row.id})).then(res => {
-                //     console.log('res',res);
-                //     if (res.data.status == 0) {
-                //         let data = res.data.data;
-                //         data.seasons = res.data.data.seasons ?  res.data.data.seasons.split(',') : [];
-                //         this.addModalData = data;
-                //         let componentTos = data.componentTos;
-                //         componentTos.map(item => {
-                //             this.addCustomData.push({
-                //                 nutrientName: item.typeId,
-                //                 components: item.weight
-                //             })
-                //         });
-                //         this.dialogVisible = true;
-                //     } else {
-                //         if (res.data.errorCode) {
-                //             this.$message.error(res.data.errorCode);
-                //         }
-                //     }
-                // }).catch(err => {
-                //     console.log('err',err)
-                // })
+                foodConflictAPI.getConflictInfo(reNull({id: row.id})).then(res => {
+                    console.log('res',res);
+                    if (res.data.status == 0) {
+                        let data = res.data.data;
+                        data.seasons = res.data.data.seasons ?  res.data.data.seasons.split(',') : [];
+                        this.addModalData = data;
+                        let componentTos = data.componentTos;
+                        componentTos.map(item => {
+                            this.addCustomData.push({
+                                nutrientName: item.typeId,
+                                components: item.weight
+                            })
+                        });
+                        this.dialogVisible = true;
+                    } else {
+                        if (res.data.errorCode) {
+                            this.$message.error(res.data.errorCode);
+                        }
+                    }
+                }).catch(err => {
+                    console.log('err',err)
+                })
             },
             handleDelClick(index, row) {
                 console.log("删除", index, row);
-                // materialAPI.deleteMaterial(reNull({ids: row.id})).then(res => {
-                //     console.log('res',res);
-                //     if (res.data.status == 0) {
-                //         this.$message.success("删除成功！");
-                //         this.getList();
-                //     } else {
-                //         if (res.data.errorCode) {
-                //             this.$message.error(res.data.errorCode);
-                //         }
-                //     }
-                // }).catch(err => {
-                //     console.log('err',err)
-                // })
+                foodConflictAPI.deleteConflict(reNull({ids: row.id})).then(res => {
+                    console.log('res',res);
+                    if (res.data.status == 0) {
+                        this.$message.success("删除成功！");
+                        this.getList();
+                    } else {
+                        if (res.data.errorCode) {
+                            this.$message.error(res.data.errorCode);
+                        }
+                    }
+                }).catch(err => {
+                    console.log('err',err)
+                })
             },
             handleAddModalData(fields) {
                 //保存
                 let addModalData = { ...this.addModalData };
                 this.$children[2].$refs[this.formRef].validate(valid => {
                     if (valid) {
-                        console.log(this.inputRule());
                         //增加数据
-                        // materialAPI.editMaterial(reNull(addModalData)).then(res => {
-                        //     console.log('res',res)
-                        //     if (res.data.status == 0) {
-                        //         this.dialogVisible = false;
-                        //         this.addModalData = {};
-                        //         this.$message.success("保存成功！");
-                        //         this.getList();
-                        //     } else {
-                        //         if (res.data.errorCode) {
-                        //             this.$message.error(res.data.errorCode);
-                        //         }
-                        //     }
-                        // }).catch(err => {
-                        //     console.log('err',err)
-                        // })
+                        foodConflictAPI.editConflict(reNull(addModalData)).then(res => {
+                            console.log('res',res)
+                            if (res.data.status == 0) {
+                                this.dialogVisible = false;
+                                this.addModalData = {};
+                                this.$message.success("保存成功！");
+                                this.getList();
+                            } else {
+                                if (res.data.errorCode) {
+                                    this.$message.error(res.data.errorCode);
+                                }
+                            }
+                        }).catch(err => {
+                            console.log('err',err)
+                        })
                     }
                 });
             },

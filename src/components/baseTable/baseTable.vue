@@ -58,7 +58,7 @@
     <pagination
       :currentPag="currentPage"
       :pageSize="pageSize"
-      :total="total "
+      :total="total"
       @sizeChange="handleSizeChange"
       @pageChange="handlePageChange"
     />
