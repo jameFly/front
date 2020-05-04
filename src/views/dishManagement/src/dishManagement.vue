@@ -167,6 +167,7 @@ export default {
       modelSearch: {},
       total: 0, //数据总条数
       searchWidth: 360,
+
       modalTitle: "新增菜品",
       dialogVisible: false,
       addData: [

@@ -289,6 +289,7 @@ export default {
             nutritionalNeedAPI.getNeedList(reNull(params)).then(res => {
                 if (res.data.status == 0) {
                     this.tableData = res.data.data.rows;
+                    this.total = res.data.data.total;
                     this.tableData.forEach(ele => {
                         console.log(ele);
                         ele["nutritionalNames"] = ele["materialNames"].length ? ele["materialNames"].join(",") : '';
