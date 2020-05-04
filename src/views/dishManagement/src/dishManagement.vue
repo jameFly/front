@@ -25,6 +25,14 @@
       @reduceAddCustomDataList="reduceAddCustomDataList"
       @onValueChange="onValueChange"
     />
+    <!--<showCollection-->
+            <!--:tableHeaders="collectHeaders"-->
+            <!--:tableData="collectTableData"-->
+            <!--:total="total"-->
+            <!--:title="collectTitle"-->
+            <!--@sizeChange="handleCollectSizeChange"-->
+            <!--@pageChange="handleCollectPageChange"-->
+    <!--/>-->
   </div>
 </template>
 
@@ -32,6 +40,7 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
+import showCollection from './showCollection'
 import { materialAPI } from "@/api/material";
 import { foodAPI } from "@/api/food";
 import { reNull } from "@/utils/common.js";
@@ -40,7 +49,8 @@ export default {
   components: {
     baseSearch,
     baseTable,
-    baseModal
+    baseModal,
+    showCollection
   },
   data() {
     return {
@@ -148,6 +158,10 @@ export default {
         {
           name: "新增",
           handleClick: this.handleAddClick
+        },
+        {
+          name: "查看收藏",
+          handleClick: this.showCollection
         }
       ],
       modelSearch: {},
@@ -226,7 +240,54 @@ export default {
                     remark: [{ required: false}],*/
       },
       isRules: true,
-      formRef: "baseForm"
+      formRef: "baseForm",
+
+      showCollection: false,
+      collectTitle: "我的收藏",
+      collectHeaders:[
+          {
+              label: "菜品名称",
+              prop: "foodName",
+              align: "center"
+          },
+          {
+              label: "时令(月)",
+              prop: "seasons",
+              align: "center"
+          },
+          {
+              label: "克重",
+              prop: "weight",
+              align: "center"
+          },
+          {
+              label: "价格(元)",
+              prop: "price",
+              align: "center"
+          },
+          {
+              label: "食材",
+              prop: "material",
+              align: "center"
+          },
+          {
+              label: "营养成分",
+              prop: "nutrient",
+              align: "center"
+          },
+
+          {
+              label: "操作",
+              align: "center",
+              buttonList: [
+                  {
+                      name: "取消收藏",
+                      handleClick: this.cancelCollect
+                  }
+              ]
+          }
+      ],
+      collectTableData:[],
     };
   },
   methods: {
@@ -334,8 +395,7 @@ export default {
                       weight: item.components
                   })
             });
-            delete addModalData.seasons;
-            delete addModalData.weight;
+
             addModalData = {
                 ...addModalData,
                 componentTos
@@ -379,6 +439,9 @@ export default {
       this.addCustomData[index][name] = value;
       this.disabledOpt();
     },
+    showCollection() {
+        this.showCollection = true
+    },
     getList(page, size) {
       let modelSearch = {
           ...this.modelSearch,
@@ -411,6 +474,9 @@ export default {
           });
         }
       });
+    },
+    cancelCollect() {
+        console.log("取消收藏")
     },
     getMaterialIdList() {
       // 获取食材下拉框

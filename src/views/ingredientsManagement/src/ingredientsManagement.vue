@@ -47,7 +47,8 @@ export default {
                 {
                     label: "食材名称",
                     type: "input",
-                    prop: "materialName"
+                    prop: "materialName",
+                    placeholder:"请输入食材名称"
                 },
                 {
                     label: "时令",
@@ -67,7 +68,8 @@ export default {
                         { value: "11", label: "十一月" },
                         { value: "12", label: "十二月" },
                     ],
-                    multiple: true
+                    multiple: true,
+                    placeholder:"请选择时令"
                 },
                 {
                     label: "食材类型",
@@ -82,6 +84,8 @@ export default {
                         { value: "海鲜", label: "海鲜" },
                         { value: "藻类", label: "藻类" },
                     ],
+                    placeholder:"请选择食材类型",
+                    multiple: true,
                 },
                 {
                     label: "查询",
@@ -138,21 +142,7 @@ export default {
                     ]
                 }
             ],
-            tableData: [
-                {
-                    id: 11,
-                    materialName: "牛肉",
-                    seasons: "01,02,03",
-                    materialType: "肉类",
-                    price: 79.4,
-                    componentTos: [
-                        {
-                            typeId: 4,
-                            weight: 1.2
-                        }
-                    ]
-                }
-            ],
+            tableData: [],
             topButtonList: [
                 {
                     name: "新增",
@@ -160,14 +150,14 @@ export default {
                 }
             ],
             modelSearch: {},
-            total: 2, //数据总条数
+            total: 0, //数据总条数
             searchWidth: 360,
 
-            modalTitle: "新增菜品",
+            modalTitle: "新增食材",
             dialogVisible: false,
             addData: [
                 {
-                    label: "菜品id",
+                    label: "食材id",
                     type: "input",
                     prop: "id",
                     hidden: true,
@@ -229,39 +219,10 @@ export default {
                     message: "必填项不能为空"
                 },
             ],
-            addModalData: {
-                id:11,
-                materialName: "牛肉",
-                seasons: "01,02,03",
-                materialType: "肉类",
-                price: 79.4,
-                componentTos: [
-                    {
-                        typeId: 4,
-                        weight: 1.2
-                    }
-                ]
-            },
+            addModalData: {},
             isCustomAdd: true,
             addCustomData: [],
-            materialNameList: [
-                {
-                    value: 1,
-                    label: "牛肉"
-                },
-                {
-                    value: 2,
-                    label: "鸡蛋"
-                },
-                {
-                    value: 3,
-                    label: "牛肉1"
-                },
-                {
-                    value: 4,
-                    label: "牛肉2"
-                }
-            ],
+            materialNameList: [],
             currentPage: 1,
             pageSize: 10,
 
@@ -411,6 +372,9 @@ export default {
                 ...this.modelSearch,
                 seasons:this.modelSearch["seasons"].length
                     ? this.modelSearch["seasons"].join(",")
+                    : "",
+                materialType: this.modelSearch["materialType"].length
+                    ? this.modelSearch["materialType"].join(",")
                     : "",
             };
             let params = {

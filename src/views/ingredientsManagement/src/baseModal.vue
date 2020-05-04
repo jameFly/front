@@ -170,7 +170,6 @@ export default {
       );
     },
     onOk() {
-      //let val = "添加菜品";
       this.$emit("addModalData");
     },
     onCancel() {
