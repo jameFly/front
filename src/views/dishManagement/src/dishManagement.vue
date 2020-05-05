@@ -152,7 +152,7 @@ export default {
           align: "center"
         },
         {
-          label: "价格(元)",
+          label: "价格",
           prop: "price",
           align: "center"
         },

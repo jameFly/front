@@ -125,7 +125,7 @@ export default {
                     align: "center"
                 },
                 {
-                    label: "价格(元)",
+                    label: "价格(元/kg)",
                     prop: "price",
                     align: "center"
                 },
