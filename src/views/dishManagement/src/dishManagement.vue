@@ -310,7 +310,10 @@ export default {
   methods: {
     showEchartsData(index, row) {
         console.log("详情")
-        this.echartsVisible = true
+        this.echartsVisible = true;
+        this.$nextTick(() => {
+          this.$children[4].initCharts();
+        })
         //获取图表数据
     },
     cancelEchartsData() {
