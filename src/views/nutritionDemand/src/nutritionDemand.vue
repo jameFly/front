@@ -368,7 +368,7 @@ export default {
                     this.total = res.data.data.total;
                     this.tableData.forEach(ele => {
                         console.log(ele);
-                        ele["nutritionalNames"] = ele["materialNames"].length ? ele["materialNames"].join(",") : '';
+                        ele["nutritionalNames"] = ele["nutritionalNames"].length ? ele["nutritionalNames"].join(",") : '';
                     });
                 }
             });
