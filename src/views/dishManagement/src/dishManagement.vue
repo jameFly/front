@@ -147,7 +147,7 @@ export default {
           align: "center"
         },
         {
-          label: "克重",
+          label: "克重(g)",
           prop: "weight",
           align: "center"
         },
@@ -184,7 +184,7 @@ export default {
               handleClick: this.handleColClick
             },
            {
-              name: "详情",
+              name: "查看",
               handleClick: this.showEchartsData
            }
           ]
@@ -197,7 +197,7 @@ export default {
           handleClick: this.handleAddClick
         },
         {
-          name: "查看收藏",
+          name: "收藏夹",
           handleClick: this.showCollection
         }
       ],
