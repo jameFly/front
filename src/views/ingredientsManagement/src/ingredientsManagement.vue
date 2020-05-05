@@ -253,7 +253,7 @@ export default {
     methods: {
         showEchartsData(index, row) {
             console.log("详情")
-            foodAPI.getMaterialChart(reNull({id: row.id})).then(res => {
+            materialAPI.getMaterialChart(reNull({id: row.id})).then(res => {
                 console.log('res',res);
                 if (res.data.status == 0) {
                     let data = res.data.data;
