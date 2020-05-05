@@ -8,37 +8,12 @@ export default {
   props: {
     title: String,
     echartsVisible: Boolean,
-    echartsFoodData: {
-        type: Object,
-        default: () => {}
-    },
     echartsNutritionData: {
         type: Object,
         default: () => {}
     }
   },
   methods: {
-    initCharts() {
-      const { nameList = [], contentList = [] } = this.echartsFoodData;
-      let myChart = this.$echarts.init(this.$refs.chart);
-      console.log(this.$refs.chart);
-      // 绘制图表
-      myChart.setOption({
-        title: { text: "食材含量柱状图" },
-        tooltip: {},
-        xAxis: {
-          data: nameList
-        },
-        yAxis: {},
-        series: [
-          {
-            name: "含量",
-            type: "bar",
-            data: contentList
-          }
-        ]
-      });
-    },
     onCancel() {
       this.$emit("cancelEchartsData");
     },
@@ -98,7 +73,6 @@ export default {
           on-close={this.onCancel}
         >
             <div class="charts">
-                <div style="width:400px;height:400px" ref="chart"></div>
                 <div style="width:400px;height:400px" ref="pieChart"></div>
             </div>
         </el-dialog>

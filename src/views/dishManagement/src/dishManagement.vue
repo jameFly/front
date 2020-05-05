@@ -82,6 +82,27 @@ export default {
           multiple: true
         },
         {
+            label: "时令",
+            type: "select",
+            prop: "seasons",
+            placeholder:"请选择食材",
+            options: [
+                { value: "01", label: "一月" },
+                { value: "02", label: "二月" },
+                { value: "03", label: "三月" },
+                { value: "04", label: "四月" },
+                { value: "05", label: "五月" },
+                { value: "06", label: "六月" },
+                { value: "07", label: "七月" },
+                { value: "08", label: "八月" },
+                { value: "09", label: "九月" },
+                { value: "10", label: "十月" },
+                { value: "11", label: "十一月" },
+                { value: "12", label: "十二月" },
+            ],
+            multiple: true
+        },
+        {
           label: "营养成分",
           type: "select",
           prop: "nutritionalIds",
@@ -169,7 +190,7 @@ export default {
           ]
         }
       ],
-      tableData: [{id:1, foodName: "lalala"}],
+      tableData: [],
       topButtonList: [
         {
           name: "新增",
@@ -301,8 +322,8 @@ export default {
       collectCurrentPage: 1,
       collectPageSize: 10,
 
-      echartsFoodData: [],
-      echartsNutritionData: [],
+      echartsFoodData: {},
+      echartsNutritionData: {},
       echartsVisible: false,
       echartsTitle: "详情图"
     };
@@ -310,15 +331,30 @@ export default {
   methods: {
     showEchartsData(index, row) {
         console.log("详情")
-        this.echartsVisible = true;
-        this.$nextTick(() => {
-          this.$children[4].initCharts();
+        foodAPI.getFoodChart(reNull({id: row.id})).then(res => {
+            console.log('res',res);
+            if (res.data.status == 0) {
+                let data = res.data.data;
+                this.echartsFoodData = data.length ? data[0] : {};
+                this.echartsNutritionData = data.length ? data[1] : {};
+                this.echartsVisible = true;
+                this.$nextTick(() => {
+                    this.$children[4].initCharts();
+                    this.$children[4].initPieCharts();
+                })
+                //获取图表数据
+            } else {
+                if (res.data.errorCode) {
+                    this.$message.error(res.data.errorCode);
+                }
+            }
+        }).catch(err => {
+            console.log('err',err)
         })
-        //获取图表数据
     },
     cancelEchartsData() {
-        this.echartsFoodData = [];
-        this.echartsNutritionData = [];
+        this.echartsFoodData = {};
+        this.echartsNutritionData = {};
         this.echartsVisible = false
     },
     handleQueryClick() {
@@ -424,7 +460,8 @@ export default {
                       weight: item.components
                   })
             });
-
+            delete addModalData.weight;
+            delete addModalData.seasons;
             addModalData = {
                 ...addModalData,
                 componentTos
@@ -470,7 +507,7 @@ export default {
     },
     showCollection() {
         this.isShowCollection = true;
-        this.getCollectionList()
+        //this.getCollectionList()
     },
     handleCancelChange() {
         this.isShowCollection = false
@@ -493,6 +530,9 @@ export default {
               : "",
           nutritionalIds:this.modelSearch["nutritionalIds"].length
               ? this.modelSearch["nutritionalIds"].join(",")
+              : "",
+          seasons:this.modelSearch["seasons"].length
+              ? this.modelSearch["seasons"].join(",")
               : "",
       };
       if (modelSearch.priceFrom && modelSearch.priceTo) {
@@ -537,7 +577,7 @@ export default {
     },
     cancelCollect(index, row) {
         console.log("取消收藏");
-        foodAPI.collectFood(reNull({ids: row.id, status: false})).then(res => {
+        foodAPI.collectFood({ids: row.id, status: false}).then(res => {
             console.log('res',res);
             if (res.data.status == 0) {
                 this.$message.success("取消收藏成功！");

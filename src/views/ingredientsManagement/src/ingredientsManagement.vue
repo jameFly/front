@@ -25,6 +25,12 @@
             @reduceAddCustomDataList="reduceAddCustomDataList"
             @onValueChange="onValueChange"
     />
+    <foodNutritionCircle
+            :echartsNutritionData="echartsNutritionData"
+            :echartsVisible="echartsVisible"
+            :title="echartsTitle"
+            @cancelEchartsData="cancelEchartsData"
+    />
   </div>
 </template>
 
@@ -32,6 +38,7 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
+import foodNutritionCircle from './foodNutritionCircle'
 import { reNull } from "@/utils/common.js";
 import { materialAPI } from "@/api/material"
 export default {
@@ -39,7 +46,8 @@ export default {
     components: {
         baseSearch,
         baseTable,
-        baseModal
+        baseModal,
+        foodNutritionCircle,
     },
     data(){
         return{
@@ -132,6 +140,10 @@ export default {
                     align: "center",
                     buttonList: [
                         {
+                            name: "详情",
+                            handleClick: this.showEchartsData
+                        },
+                        {
                             name: "编辑",
                             handleClick: this.handleEditClick
                         },
@@ -142,7 +154,7 @@ export default {
                     ]
                 }
             ],
-            tableData: [],
+            tableData: [{id: 1, materialName: "111"}],
             topButtonList: [
                 {
                     name: "新增",
@@ -227,10 +239,43 @@ export default {
             pageSize: 10,
 
             isRules: true,
-            formRef: "baseForm"
+            formRef: "baseForm",
+
+            echartsNutritionData: {
+                name: "营养及含量",
+                nameList: ["钙", "铁", "碳水化合物", "蛋白质"],
+                contentList: [20.2, 2.3, 1.2, 0.004]
+            },
+            echartsVisible: false,
+            echartsTitle: "详情图"
         }
     },
     methods: {
+        showEchartsData(index, row) {
+            console.log("详情")
+            foodAPI.getMaterialChart(reNull({id: row.id})).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    let data = res.data.data;
+                    this.echartsNutritionData = data ? data : {};
+                    this.echartsVisible = true;
+                    this.$nextTick(() => {
+                        this.$children[3].initPieCharts();
+                    })
+                    //获取图表数据
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
+        },
+        cancelEchartsData() {
+            this.echartsNutritionData = {};
+            this.echartsVisible = false
+        },
         handleQueryClick() {
             console.log("查询");
             this.getList();
