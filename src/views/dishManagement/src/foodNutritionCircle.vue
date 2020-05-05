@@ -1,14 +1,26 @@
-<template>
-    <div class="foodNutritionCircle">
-        <div style="width:500px;height:500px" ref="chart"></div>
-    </div>
-</template>
+<!--<template>-->
+    <!--<div className="foodNutritionCircle">-->
+        <!--<el-dialog-->
+                <!--:title={title}-->
+                <!--:visible={echartsVisible}-->
+                <!--@close="onCancel"-->
+        <!--&gt;-->
+
+        <!--</el-dialog>-->
+        <!--<div style="width:500px;height:500px" ref="chart"></div>-->
+    <!--</div>-->
+<!--</template>-->
 
 <script>
     export default {
         name: "foodNutritionCircle",
         data () {
             return {};
+        },
+        props:{
+            title: String,
+            echartsVisible: Boolean,
+
         },
         methods: {
             initCharts () {
@@ -28,10 +40,30 @@
                         data: [5, 20, 36, 10, 10, 20]
                     }]
                 });
-            }
+            },
+            onCancel() {
+                this.$emit("cancelEchartsData");
+            },
+        },
+        render(h) {
+            const { title, echartsVisible, onCancel } = this;
+            return (
+                <div className="foodNutritionCircle">
+                    <el-dialog
+                        title={title}
+                        visible={echartsVisible}
+                        on-close={this.onCancel}
+                    >
+                        <div style="width:500px;height:500px" ref="chart"></div>
+                    </el-dialog>
+                </div>
+            )
         },
         mounted () {
-            this.initCharts();
+            this.$nextTick(() => {
+                console.log(this.$refs.chart);
+                this.initCharts()
+            });
         }
     }
 </script>

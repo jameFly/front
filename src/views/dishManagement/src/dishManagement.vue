@@ -35,6 +35,13 @@
             @pageChange="handleCollectPageChange"
             @handleCancelChange="handleCancelChange"
     />
+    <foodNutritionCircle
+            :echartsFoodData="echartsFoodData"
+            :echartsNutritionData="echartsNutritionData"
+            :echartsVisible="echartsVisible"
+            :title="echartsTitle"
+            @cancelEchartsData="cancelEchartsData"
+    />
   </div>
 </template>
 
@@ -43,6 +50,7 @@ import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
 import showCollection from './showCollection'
+import foodNutritionCircle from './foodNutritionCircle'
 import { materialAPI } from "@/api/material";
 import { foodAPI } from "@/api/food";
 import { foodCollectAPI } from "@/api/foodCollect";
@@ -53,7 +61,8 @@ export default {
     baseSearch,
     baseTable,
     baseModal,
-    showCollection
+    showCollection,
+    foodNutritionCircle
   },
   data() {
     return {
@@ -152,11 +161,15 @@ export default {
             {
               name: "收藏",
               handleClick: this.handleColClick
-            }
+            },
+           {
+              name: "详情",
+              handleClick: this.showEchartsData
+           }
           ]
         }
       ],
-      tableData: [],
+      tableData: [{id:1, foodName: "lalala"}],
       topButtonList: [
         {
           name: "新增",
@@ -287,9 +300,45 @@ export default {
       collectTableData:[],
       collectCurrentPage: 1,
       collectPageSize: 10,
+
+      echartsFoodData: [],
+      echartsNutritionData: [],
+      echartsVisible: false,
+      echartsTitle: "详情图"
     };
   },
   methods: {
+    showEchartsData(index, row) {
+        console.log("详情")
+        //this.echartsVisible = true
+        foodAPI.getFoodInfo(reNull({id: row.id})).then(res => {
+            console.log('res',res);
+            if (res.data.status == 0) {
+                let data = res.data.data;
+                data.seasons = res.data.data.seasons ?  res.data.data.seasons.split(',') : [];
+                this.addModalData = data;
+                let componentTos = data.componentTos;
+                componentTos.map(item => {
+                    this.addCustomData.push({
+                        nutrientName: item.typeId,
+                        components: item.weight
+                    })
+                });
+                this.dialogVisible = true;
+            } else {
+                if (res.data.errorCode) {
+                    this.$message.error(res.data.errorCode);
+                }
+            }
+        }).catch(err => {
+            console.log('err',err)
+        })
+    },
+    cancelEchartsData() {
+        this.echartsFoodData = [];
+        this.echartsNutritionData = [];
+        this.echartsVisible = false
+    },
     handleQueryClick() {
       console.log("查询");
       this.getList();
