@@ -310,29 +310,8 @@ export default {
   methods: {
     showEchartsData(index, row) {
         console.log("详情")
-        //this.echartsVisible = true
-        foodAPI.getFoodInfo(reNull({id: row.id})).then(res => {
-            console.log('res',res);
-            if (res.data.status == 0) {
-                let data = res.data.data;
-                data.seasons = res.data.data.seasons ?  res.data.data.seasons.split(',') : [];
-                this.addModalData = data;
-                let componentTos = data.componentTos;
-                componentTos.map(item => {
-                    this.addCustomData.push({
-                        nutrientName: item.typeId,
-                        components: item.weight
-                    })
-                });
-                this.dialogVisible = true;
-            } else {
-                if (res.data.errorCode) {
-                    this.$message.error(res.data.errorCode);
-                }
-            }
-        }).catch(err => {
-            console.log('err',err)
-        })
+        this.echartsVisible = true
+        //获取图表数据
     },
     cancelEchartsData() {
         this.echartsFoodData = [];
