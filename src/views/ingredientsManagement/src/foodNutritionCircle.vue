@@ -18,7 +18,7 @@ export default {
       this.$emit("cancelEchartsData");
     },
     initPieCharts() {
-        const { nameList = [], contentList = [] } = this.echartsNutritionData;
+        const { nameList = [], contentList = [], name = '' } = this.echartsNutritionData;
         let isData = this.echartsNutritionData ? true : false
         let data = [];
         let i;
@@ -32,7 +32,7 @@ export default {
         console.log(this.$refs.pieChart);
         myChart.setOption({
             title: {
-                text: '营养含量饼状图',
+                text: name,
                 left: 'center'
             },
             tooltip: {
@@ -73,7 +73,7 @@ export default {
           on-close={this.onCancel}
         >
             <div class="charts">
-                <div style="width:400px;height:400px" ref="pieChart"></div>
+                <div style="width:700px;height:400px" ref="pieChart"></div>
             </div>
         </el-dialog>
       </div>

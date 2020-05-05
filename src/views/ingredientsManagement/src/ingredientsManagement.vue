@@ -154,7 +154,7 @@ export default {
                     ]
                 }
             ],
-            tableData: [],
+            tableData: [{id: 1, name: "lalala"}],
             topButtonList: [
                 {
                     name: "新增",
@@ -241,13 +241,9 @@ export default {
             isRules: true,
             formRef: "baseForm",
 
-            echartsNutritionData: {
-                name: "营养及含量",
-                nameList: ["钙", "铁", "碳水化合物", "蛋白质"],
-                contentList: [20.2, 2.3, 1.2, 0.004]
-            },
+            echartsNutritionData: {},
             echartsVisible: false,
-            echartsTitle: "详情图"
+            echartsTitle: "营养含量详情图"
         }
     },
     methods: {

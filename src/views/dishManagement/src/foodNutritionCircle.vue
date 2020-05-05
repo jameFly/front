@@ -44,7 +44,6 @@ export default {
     },
     initPieCharts() {
         const { nameList = [], contentList = [] } = this.echartsNutritionData;
-        let isData = this.echartsNutritionData ? true : false
         let data = [];
         let i;
         for( i = 0; i< nameList.length; i++){
@@ -67,7 +66,7 @@ export default {
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data: nameList
+                data: nameList,
             },
             series: [
                 {
@@ -96,10 +95,11 @@ export default {
           title={title}
           visible={echartsVisible}
           on-close={this.onCancel}
+          width="1150px"
         >
             <div class="charts">
                 <div style="width:400px;height:400px" ref="chart"></div>
-                <div style="width:400px;height:400px" ref="pieChart"></div>
+                <div style="width:650px;height:400px" ref="pieChart"></div>
             </div>
         </el-dialog>
       </div>
