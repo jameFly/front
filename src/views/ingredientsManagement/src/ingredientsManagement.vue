@@ -367,6 +367,7 @@ export default {
                         // delete addModalData.weight;
                         addModalData = {
                             ...addModalData,
+                            seasons: addModalData.seasons && addModalData.seasons.length ? addModalData.seasons.join(',') : '',
                             componentTos
                         };
                         materialAPI.editMaterial(reNull(addModalData)).then(res => {

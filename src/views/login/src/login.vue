@@ -60,6 +60,7 @@
                                             class="login-form-input"
                                             v-model={loginFormData.password}
                                             placeholder={"请输入密码"}
+                                            show-password
                                         ></el-input>
                                     </el-form-item>
                                     <el-form-item>

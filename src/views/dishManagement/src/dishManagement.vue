@@ -570,8 +570,17 @@ export default {
                 this.collectTotal = res.data.data.total;
                 this.collectTableData.forEach(ele => {
                     console.log(ele);
-                    ele["material"] = ele["materialNames"].join(",");
-                    ele["nutrient"] = ele["nutrientNames"].join(",");
+                    if (ele["nutrientNames"].length > 3){
+                        let nutrient = [];
+                        for(let i = 0; i < 3; i++){
+                            nutrient.push(ele["nutrientNames"][i])
+                        }
+                        ele["material"] = ele["materialNames"].join(",");
+                        ele["nutrient"] = `${nutrient.join(",")}...`;
+                    } else {
+                        ele["material"] = ele["materialNames"].join(",");
+                        ele["nutrient"] = ele["nutrientNames"].join(",");
+                    }
                 });
             }
         });

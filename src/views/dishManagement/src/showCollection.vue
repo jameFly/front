@@ -4,6 +4,7 @@
                 :title="title"
                 :visible="dialogVisible"
                 @close="handleCancelChange"
+                :width="width"
         >
             <baseTable
                     :tableHeaders="tableHeaders"
@@ -38,6 +39,11 @@
             total:  Number,
             dialogVisible: Boolean,
             formRef: String
+        },
+        data(){
+            return{
+                width: "1000px"
+            }
         },
         methods: {
             handleSizeChange(val) {
