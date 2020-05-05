@@ -625,7 +625,7 @@ export default {
             console.log(res);
             if (res.data.status == 0) {
                 res.data.data.forEach(ele => {
-                    this.searchData[2].options.push({
+                    this.searchData[3].options.push({
                         label: ele.name,
                         value: ele.id
                     });
