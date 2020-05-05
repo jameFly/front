@@ -24,15 +24,18 @@ export default {
       console.log(this.$refs.chart);
       // 绘制图表
       myChart.setOption({
-        title: { text: "食材含量柱状图" },
+        title: { text: "食材含量图" },
         tooltip: {},
         xAxis: {
+            name:"名称",
           data: nameList
         },
-        yAxis: {},
+        yAxis: {
+            name:"含量/克"
+        },
         series: [
           {
-            name: "含量",
+            name: "含量(克)",
             type: "bar",
             data: contentList
           }
@@ -56,7 +59,7 @@ export default {
         console.log(this.$refs.pieChart);
         myChart.setOption({
             title: {
-                text: '营养含量饼状图',
+                text: '营养含量图',
                 left: 'center'
             },
             tooltip: {
@@ -70,7 +73,7 @@ export default {
             },
             series: [
                 {
-                    name: '营养名称及含量',
+                    name: '营养含量(克)',
                     type: 'pie',
                     radius: '55%',
                     center: ['50%', '60%'],

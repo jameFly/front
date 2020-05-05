@@ -78,7 +78,7 @@ export default {
             ],
             tableHeaders: [
                 {
-                    label: "营养需求名",
+                    label: "名称",
                     prop: "name",
                     align: "center"
                 },
@@ -106,7 +106,7 @@ export default {
                             handleClick: this.handleDelClick
                         },
                         {
-                            name: "详情",
+                            name: "寻找菜品",
                             handleClick: this.handleDetailClick
                         }
                     ]
@@ -159,7 +159,7 @@ export default {
             formRef: "baseForm",
 
             isShowDetail: false,
-            detailTitle: "详情",
+            detailTitle: "符合的菜品",
             detailHeaders:[
                 {
                     label: "菜品名称",
@@ -167,7 +167,7 @@ export default {
                     align: "center"
                 },
                 {
-                    label: "需求克重",
+                    label: "需要克重(g)",
                     prop: "needWeight",
                     align: "center"
                 }

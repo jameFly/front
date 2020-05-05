@@ -140,7 +140,7 @@ export default {
                     align: "center",
                     buttonList: [
                         {
-                            name: "详情",
+                            name: "营养详情",
                             handleClick: this.showEchartsData
                         },
                         {
