@@ -112,13 +112,7 @@ export default {
                     ]
                 }
             ],
-            tableData: [{
-                id: 1,
-                name: "lalala"
-            },{
-                id: 2,
-                name: "lalala"
-            }],
+            tableData: [],
             topButtonList: [
                 {
                     name: "新增",

@@ -154,7 +154,7 @@ export default {
                     ]
                 }
             ],
-            tableData: [{id: 1, materialName: "111"}],
+            tableData: [],
             topButtonList: [
                 {
                     name: "新增",
