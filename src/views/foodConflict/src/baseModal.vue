@@ -8,11 +8,6 @@ export default {
       type: Array,
       default: () => []
     },
-    addCustomData: {
-      type: Array,
-      default: () => []
-    },
-    isCustomAdd: Boolean,
     title: String,
     dialogVisible: Boolean,
     addModalData: {
@@ -22,10 +17,6 @@ export default {
     rules: {
       type: Object,
       default: () => {}
-    },
-    materialNameList: {
-      type: Array,
-      default: () => []
     },
     isRules: {
       type: Boolean,
@@ -124,63 +115,8 @@ export default {
         );
       }
     },
-    renderCustomFormItem({ item, index, len, reduce, onValueChange }) {
-      const { materialNameList } = this;
-      const isShowReduce = len > 1;
-      const { id, nutrientName, components } = item;
-      return (
-        <el-row class="input-customer-content">
-          <el-col span={4}>{`第${index + 1}种食材`}</el-col>
-          <el-col span={8}>
-            <el-select
-              class="input-nutrientName"
-              v-model={this.addCustomData[index]["nutrientName"]}
-              placeholder={"请选择"}
-              on-change={value => onValueChange(value, index, "nutrientName")}
-            >
-              {materialNameList.length &&
-                materialNameList.map((item, itemIndex) => {
-                  return (
-                    <el-option
-                      key={index + "-" + itemIndex}
-                      label={item.label}
-                      value={item.value}
-                      disabled={item.disabled}
-                    ></el-option>
-                  );
-                })}
-            </el-select>
-          </el-col>
-          <el-col span={8}>
-            <el-input-number
-              v-model={this.addCustomData[index]["components"]}
-              class="input-components"
-              placeholder={"请输入"}
-              controls-position="right"
-              min={0}
-              on-blur={e => onValueChange(e.target.value, index, "components")}
-            ></el-input-number>
-          </el-col>
-          <el-col span={4} class="input-reduce">
-            {isShowReduce && (
-              <i
-                class="el-icon-remove-outline fontSize20"
-                on-click={() => reduce(index)}
-              />
-            )}
-          </el-col>
-        </el-row>
-      );
-    },
     onOk() {
-      let fields = [
-        { label: "foodName", name: "菜品名" },
-        { label: "seasons", name: "时令" },
-        { label: "price", name: "价格" },
-        { label: "weight", name: "菜品克重" }
-      ];
-      //let val = "添加菜品";
-      this.$emit("addModalData", fields);
+      this.$emit("addModalData");
     },
     onCancel() {
       this.$emit("cancelModalData");
@@ -188,12 +124,6 @@ export default {
     addCustomDataList() {
       this.$emit("handleAddCustomDataList");
     },
-    reduce(index) {
-      this.$emit("reduceAddCustomDataList", index);
-    },
-    onValueChange(value, index, name) {
-      this.$emit("onValueChange", { value, index, name });
-    }
   },
   render(h) {
     const {
@@ -228,35 +158,6 @@ export default {
               {addData.map(item => {
                 return renderFormItem(item);
               })}
-              {isCustomAdd && (
-                <el-row class="customer-title">
-                  <el-col span={4} class="customer-title-top left">
-                    食材及含量
-                  </el-col>
-                  <el-col span={8} class="customer-title-top left">
-                    食材
-                  </el-col>
-                  <el-col span={8} class="customer-title-top left">
-                    含量
-                  </el-col>
-                  <el-col span={4} class="customer-title-top center">
-                    <el-button
-                      icon="el-icon-plus"
-                      on-click={this.addCustomDataList}
-                    />
-                  </el-col>
-                </el-row>
-              )}
-              {isCustomAdd &&
-                addCustomData.map((item, index) => {
-                  return renderCustomFormItem({
-                    len: addCustomData.length,
-                    item,
-                    index,
-                    reduce,
-                    onValueChange
-                  });
-                })}
               <div class="modal-button">
                 <el-button on-click={this.onCancel}>取消</el-button>
                 <el-button type="primary" on-click={this.onOk}>

@@ -1,13 +1,13 @@
 
 <script>
-
+    import { UserAPI } from "@/api/User";
     export default {
         name: "login",
         components: {},
         data(){
             return {
                 loginFormData: {
-                    username: '',
+                    name: '',
                     password: '',
                 },
                 url: require('./logo.png')
@@ -17,16 +17,20 @@
             login() {
                 const loginFormData = {...this.loginFormData};
                 console.log(loginFormData);
-                if (loginFormData.username && loginFormData.password) {
-                    /*foodAPI.getFoodList(params).then(res => {
-                    if (res.data.status == 0) {
+                if (loginFormData.name && loginFormData.password) {
+                    //setTimeout(() => {location.href = '/dishManagement'}, 1000)
+                    UserAPI.login(loginFormData).then(res => {
+                        console.log('res',res);
+                        if (res.data.status == 0) {
                             setTimeout(() => {location.href = '/dishManagement'}, 1000)
-                        })
-                    }
+                        } else {
+                            if (res.data.errorCode) {
+                                this.$message.error(res.data.errorCode);
+                            }
+                        }
                     }).catch(err => {
-                        console.log(err)
-                    })*/
-                    setTimeout(() => {location.href = '/dishManagement'}, 1000)
+                        console.log('err',err)
+                    })
                 } else {
                     this.$message.error("用户名或密码不能为空！");
                 }
@@ -47,7 +51,7 @@
                                     <el-form-item label={"帐号"}>
                                         <el-input
                                             class="login-form-input"
-                                            v-model={loginFormData.username}
+                                            v-model={loginFormData.name}
                                             placeholder={"请输入帐号"}
                                         ></el-input>
                                     </el-form-item>
@@ -56,6 +60,7 @@
                                             class="login-form-input"
                                             v-model={loginFormData.password}
                                             placeholder={"请输入密码"}
+                                            show-password
                                         ></el-input>
                                     </el-form-item>
                                     <el-form-item>

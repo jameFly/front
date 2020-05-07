@@ -103,7 +103,9 @@
                 ],
                 tableData: [],
                 modelSearch: {},
-                total: 2 //数据总条数
+                total: 0, //数据总条数
+                currentPage: 1,
+                pageSize: 10,
             };
         },
         methods: {
@@ -113,25 +115,31 @@
             },
             handleRefreshClick() {
                 console.log("清除");
+                this.modelSearch = {}
             },
             handlesizeChange(val) {
+                this.pageSize = val;
                 console.log(val);
+                this.getList(this.currentPage, val, "handlesizeChange");
             },
             handlepageChange(val) {
+                this.currentPage = val;
                 console.log(val);
+                this.getList(val, this.pageSize, "handlepageChange");
             },
-            getList() {
+            getList(page, size) {
+                let modelSearch = {...this.modelSearch,};
                 let params = {
-                    page: 1,
-                    rows: 10,
-                    ...this.modelSearch
+                    page: page || 1,
+                    rows: size || 10,
+                    ...modelSearch
                 };
                 nutritionStandardAPI.getStandardList(params).then(res => {
                     console.log(res);
                     if (res.data.status == 0) {
-
                         let targetArr = ["energy","protein","fat","calcium","iron","iodine","vitaminC","vitaminB1","vitaminB2"];
                         this.tableData = res.data.data.rows;
+                        this.total = res.data.data.total;
                         this.tableData.forEach(ele => {
                             console.log(ele);
                             let dataArr = ele["remark"].split(',');

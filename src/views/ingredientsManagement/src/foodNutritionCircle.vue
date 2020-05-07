@@ -8,45 +8,18 @@ export default {
   props: {
     title: String,
     echartsVisible: Boolean,
-    echartsFoodData: {
-        type: Object,
-        default: () => {}
-    },
     echartsNutritionData: {
         type: Object,
         default: () => {}
     }
   },
   methods: {
-    initCharts() {
-      const { nameList = [], contentList = [] } = this.echartsFoodData;
-      let myChart = this.$echarts.init(this.$refs.chart);
-      console.log(this.$refs.chart);
-      // 绘制图表
-      myChart.setOption({
-        title: { text: "食材含量图" },
-        tooltip: {},
-        xAxis: {
-            name:"名称",
-          data: nameList
-        },
-        yAxis: {
-            name:"含量/克"
-        },
-        series: [
-          {
-            name: "含量(克)",
-            type: "bar",
-            data: contentList
-          }
-        ]
-      });
-    },
     onCancel() {
       this.$emit("cancelEchartsData");
     },
     initPieCharts() {
-        const { nameList = [], contentList = [] } = this.echartsNutritionData;
+        const { nameList = [], contentList = [], name = '' } = this.echartsNutritionData;
+        let isData = this.echartsNutritionData ? true : false
         let data = [];
         let i;
         for( i = 0; i< nameList.length; i++){
@@ -59,7 +32,7 @@ export default {
         console.log(this.$refs.pieChart);
         myChart.setOption({
             title: {
-                text: '营养含量图',
+                text: name,
                 left: 'center'
             },
             tooltip: {
@@ -69,11 +42,11 @@ export default {
             legend: {
                 orient: 'vertical',
                 left: 'left',
-                data: nameList,
+                data: nameList
             },
             series: [
                 {
-                    name: '营养含量(克)',
+                    name: '营养名称及含量',
                     type: 'pie',
                     radius: '55%',
                     center: ['50%', '60%'],
@@ -98,11 +71,9 @@ export default {
           title={title}
           visible={echartsVisible}
           on-close={this.onCancel}
-          width="1150px"
         >
             <div class="charts">
-                <div style="width:400px;height:400px" ref="chart"></div>
-                <div style="width:650px;height:400px" ref="pieChart"></div>
+                <div style="width:700px;height:400px" ref="pieChart"></div>
             </div>
         </el-dialog>
       </div>

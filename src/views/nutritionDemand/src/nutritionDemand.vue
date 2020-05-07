@@ -25,6 +25,17 @@
             @reduceAddCustomDataList="reduceAddCustomDataList"
             @onValueChange="onValueChange"
     />
+    <showDetail
+            :tableHeaders="detailHeaders"
+            :tableData="detailTableData"
+            :total="detailTotal"
+            :title="detailTitle"
+            :dialogVisible="isShowDetail"
+            @sizeChange="handleDetailSizeChange"
+            @pageChange="handleDetailPageChange"
+            @handleCancelChange="handleDetailChange"
+    />
+
   </div>
 </template>
 
@@ -32,28 +43,25 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
+import showDetail from "./showDetail"
+import { nutritionalNeedAPI } from "@/api/nutritionNeed";
+import { materialAPI } from "@/api/material";
 import { reNull } from "@/utils/common.js";
 export default {
     name: "nutritionDemand",
     components: {
         baseSearch,
         baseTable,
-        baseModal
+        baseModal,
+        showDetail
     },
     data(){
         return{
             searchData: [
                 {
-                    label: "菜品名称",
+                    label: "营养需求",
                     type: "input",
-                    prop: "foodName"
-                },
-                {
-                    label: "食材",
-                    type: "select",
-                    prop: "materialIds",
-                    options: [],
-                    multiple: true
+                    prop: "name"
                 },
                 {
                     label: "查询",
@@ -70,33 +78,18 @@ export default {
             ],
             tableHeaders: [
                 {
-                    label: "菜品名称",
-                    prop: "foodName",
-                    align: "center"
-                },
-                {
-                    label: "时令(月)",
-                    prop: "seasons",
-                    align: "center"
-                },
-                {
-                    label: "克重",
-                    prop: "weight",
-                    align: "center"
-                },
-                {
-                    label: "价格(元)",
-                    prop: "price",
-                    align: "center"
-                },
-                {
-                    label: "食材",
-                    prop: "material",
+                    label: "名称",
+                    prop: "name",
                     align: "center"
                 },
                 {
                     label: "营养成分",
-                    prop: "nutrient",
+                    prop: "nutritionalNames",
+                    align: "center"
+                },
+                {
+                    label: "描述",
+                    prop: "remark",
                     align: "center"
                 },
 
@@ -113,8 +106,8 @@ export default {
                             handleClick: this.handleDelClick
                         },
                         {
-                            name: "收藏",
-                            handleClick: this.handleColClick
+                            name: "寻找菜品",
+                            handleClick: this.handleDetailClick
                         }
                     ]
                 }
@@ -127,54 +120,26 @@ export default {
                 }
             ],
             modelSearch: {},
-            total: 2, //数据总条数
+            total: 0, //数据总条数
             searchWidth: 360,
 
-            modalTitle: "新增菜品",
+            modalTitle: "新增营养需求",
             dialogVisible: false,
             addData: [
                 {
-                    label: "菜品id",
+                    label: "营养需求id",
                     type: "input",
                     prop: "id",
                     hidden: true,
                     message: "必填项不能为空"
                 },
                 {
-                    label: "菜品名",
+                    label: "营养需求",
                     type: "input",
-                    prop: "foodName",
-                    placeholder: "请输入菜品名",
+                    prop: "name",
+                    placeholder: "请输入营养需求名",
                     inRule: true,
                     message: "必填项不能为空"
-                },
-                {
-                    label: "时令",
-                    type: "selectMultiple",
-                    prop: "seasons",
-                    placeholder: "请输入时令",
-                    inRule: true,
-                    message: "必填项不能为空",
-                    options: [
-                        { value: 1, label: "春季" },
-                        { value: 2, label: "夏季" },
-                        { value: 3, label: "秋季" },
-                        { value: 4, label: "冬季" }
-                    ]
-                },
-                {
-                    label: "价格",
-                    type: "inputNumber",
-                    prop: "price",
-                    placeholder: "请输入价格",
-                    inRule: true,
-                    message: "必填项不能为空"
-                },
-                {
-                    label: "菜品克重",
-                    type: "inputNumber",
-                    prop: "weight",
-                    placeholder: "请输入菜品克重,单位（克）"
                 },
                 {
                     label: "描述",
@@ -183,45 +148,34 @@ export default {
                     placeholder: "请输入描述"
                 }
             ],
-            addModalData: {
-                id: 1,
-                foodName: "蔬菜",
-                seasons: [1, 2, 3],
-                price: 20.2,
-                weight: 30,
-                remark: "好"
-            },
+            addModalData: {},
             isCustomAdd: true,
-            addCustomData: [
-                {
-                    id: 1,
-                    nutrientName: 1,
-                    components: 20
-                }
-            ],
-            materialNameList: [
-                {
-                    value: 1,
-                    label: "牛肉"
-                },
-                {
-                    value: 2,
-                    label: "鸡蛋"
-                },
-                {
-                    value: 3,
-                    label: "牛肉1"
-                },
-                {
-                    value: 4,
-                    label: "牛肉2"
-                }
-            ],
+            addCustomData: [],
+            materialNameList: [],
             currentPage: 1,
             pageSize: 10,
 
             isRules: true,
-            formRef: "baseForm"
+            formRef: "baseForm",
+
+            isShowDetail: false,
+            detailTitle: "符合的菜品",
+            detailHeaders:[
+                {
+                    label: "菜品名称",
+                    prop: "foodName",
+                    align: "center"
+                },
+                {
+                    label: "需要克重(g)",
+                    prop: "needWeight",
+                    align: "center"
+                }
+            ],
+            detailTotal: 0,
+            detailTableData:[],
+            detailCurrentPage: 1,
+            detailPageSize: 10,
         }
     },
     methods: {
@@ -231,27 +185,104 @@ export default {
         },
         handleRefreshClick() {
             console.log("清除");
+            this.modelSearch = {}
         },
         handleAddClick() {
             let _this = this;
-            this.modalTitle = "新增菜品";
+            this.modalTitle = "新增营养需求";
             this.dialogVisible = true;
             this.addModalData = {};
             this.addCustomData = [];
-            this.$nextTick(() => {
-                this.$children[2].$refs[this.formRef].clearValidate(["seasons"]);
-            });
+            // this.$nextTick(() => {
+            //     this.$children[2].$refs[this.formRef].clearValidate(["seasons"]);
+            // });
         },
         handleEditClick(index, row) {
             console.log("编辑", index, row);
-            this.modalTitle = "编辑菜品";
-            this.dialogVisible = true;
+            this.modalTitle = "编辑营养需求";
+            this.addModalData = {};
+            this.addCustomData = [];
+            nutritionalNeedAPI.getNeedInfo(reNull({id: row.id})).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    let data = res.data.data;
+                    this.addModalData = data;
+                    let componentTos = data.componentTos;
+                    componentTos.map(item => {
+                        this.addCustomData.push({
+                            nutrientName: item.typeId,
+                            components: item.weight
+                        })
+                    });
+                    this.dialogVisible = true;
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
         },
         handleDelClick(index, row) {
             console.log("删除", index, row);
+            nutritionalNeedAPI.deleteNeed(reNull({ids: row.id})).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    this.$message.success("删除成功！");
+                    this.getList(this.currentPage, this.pageSize);
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
         },
-        handleColClick(index, row) {
-            console.log("收藏", index, row);
+        // handleColClick(index, row) {
+        //     console.log("收藏", index, row);
+        // },
+        handleDetailChange() {
+            this.isShowDetail = false;
+            this.detailCurrentPage = 1;
+            this.detailPageSize = 10;
+        },
+        handleDetailSizeChange(val) {
+            this.detailPageSize = val;
+            let page = this.detailCurrentPage;
+            let size = val;
+            console.log(val);
+            this.handleDetailClick(page, size);
+        },
+        handleDetailPageChange(val) {
+            this.detailCurrentPage = val;
+            console.log(val);
+            let page = val;
+            let size = this.detailPageSize;
+            this.handleDetailClick(page, size);
+        },
+        handleDetailClick(index ,row, page, size){
+            console.log("详情", index, row);
+            let params = {
+                id: row.id,
+                page: page || 1,
+                size: size || 10
+            };
+            nutritionalNeedAPI.getNeedFoods(reNull(params)).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    this.detailTableData = res.data.data.rows;
+                    this.detailTotal = res.data.data.total;
+                    this.isShowDetail = true;
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
         },
         handlesizeChange(val) {
             this.pageSize = val;
@@ -263,22 +294,52 @@ export default {
             console.log(val);
             this.getList(val, this.pageSize, "handlepageChange");
         },
-        handleAddModalData(fields) {
+        handleAddModalData() {
             //保存
             let addModalData = { ...this.addModalData };
+            let addCustomData = [ ...this.addCustomData ];
             this.$children[2].$refs[this.formRef].validate(valid => {
                 if (valid) {
                     if (this.inputRule()) {
                         //增加数据
+                        let componentTos = [];
+                        addCustomData.map(item => {
+                            componentTos.push({
+                                typeId: item.nutrientName,
+                                weight: item.components
+                            })
+                        });
+                        // delete addModalData.seasons;
+                        // delete addModalData.weight;
+                        addModalData = {
+                            ...addModalData,
+                            componentTos
+                        };
                         console.log(addModalData);
+                        nutritionalNeedAPI.editNeed(reNull(addModalData)).then(res => {
+                            console.log('res',res)
+                            if (res.data.status == 0) {
+                                this.dialogVisible = false;
+                                this.addModalData = {};
+                                this.addCustomData = [];
+                                this.$message.success("保存成功！");
+                                this.getList();
+                            } else {
+                                if (res.data.errorCode) {
+                                    this.$message.error(res.data.errorCode);
+                                }
+                            }
+                        }).catch(err => {
+                            console.log('err',err)
+                        })
                     } else {
-                        this.$message.error("食材含量不能为空!");
+                        this.$message.error("营养及含量不能为空!");
                     }
                 }
             });
         },
         handleCancelModalData() {
-            this.modalTitle = "新增菜品";
+            this.modalTitle = "新增营养需求";
             this.dialogVisible = false;
             this.addModalData = {};
             this.addCustomData = [];
@@ -294,41 +355,38 @@ export default {
             this.addCustomData[index][name] = value;
             this.disabledOpt();
         },
-        getList() {
-            this.modelSearch["materialIds"] = this.modelSearch["materialIds"].length
-                ? this.modelSearch["materialIds"].join(",")
-                : "";
+        getList(page, size) {
+            let modelSearch = {...this.modelSearch,};
             let params = {
-                page: 1,
-                rows: 5,
-                ...this.modelSearch
+                page: page || 1,
+                rows: size || 10,
+                ...modelSearch
             };
-            console.log(params);
-            /*foodAPI.getFoodList(reNull(params)).then(res => {
+            nutritionalNeedAPI.getNeedList(reNull(params)).then(res => {
                 if (res.data.status == 0) {
                     this.tableData = res.data.data.rows;
+                    this.total = res.data.data.total;
                     this.tableData.forEach(ele => {
                         console.log(ele);
-                        ele["material"] = ele["materialNames"].join(",");
-                        ele["nutrient"] = ele["nutrientNames"].join(",");
+                        ele["nutritionalNames"] = ele["nutritionalNames"].length ? ele["nutritionalNames"].join(",") : '';
                     });
                 }
-            });*/
+            });
         },
         getMaterialIdList() {
-            // 获取食材下拉框
-            /*let options = [];
-            foodAPI.getMaterialIds().then(res => {
+            // 获取营养
+            let options = [];
+            materialAPI.getMaterialIds().then(res => {
                 console.log(res);
                 if (res.data.status == 0) {
                     res.data.data.forEach(ele => {
-                        this.searchData[1].options.push({
+                        this.materialNameList.push({
                             label: ele.name,
                             value: ele.id
-                        });
+                        })
                     });
                 }
-            });*/
+            });
         },
         Init() {
             this.getList();
@@ -348,11 +406,12 @@ export default {
             });
         },
         inputRule() {
-            let res = true;
+            let res = false;
+            console.log(this.addCustomData.length);
             if (this.addCustomData && this.addCustomData.length) {
                 for (let i = 0; i < this.addCustomData.length; i++) {
-                    if (!this.addCustomData[i].components) {
-                        res = false;
+                    if (this.addCustomData[i].components && this.addCustomData[i].nutrientName) {
+                        res = true;
                         break;
                     }
                 }

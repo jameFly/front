@@ -126,7 +126,7 @@ export default {
       const { id, nutrientName, components } = item;
       return (
         <el-row class="input-customer-content">
-          <el-col span={4}>{`第${index + 1}种食材`}</el-col>
+          <el-col span={4}>{`第${index + 1}种营养`}</el-col>
           <el-col span={8}>
             <el-select
               class="input-nutrientName"
@@ -170,14 +170,7 @@ export default {
       );
     },
     onOk() {
-      let fields = [
-        { label: "foodName", name: "菜品名" },
-        { label: "seasons", name: "时令" },
-        { label: "price", name: "价格" },
-        { label: "weight", name: "菜品克重" }
-      ];
-      //let val = "添加菜品";
-      this.$emit("addModalData", fields);
+      this.$emit("addModalData");
     },
     onCancel() {
       this.$emit("cancelModalData");
@@ -228,10 +221,10 @@ export default {
               {isCustomAdd && (
                 <el-row class="customer-title">
                   <el-col span={4} class="customer-title-top left">
-                    食材及含量
+                    营养及含量
                   </el-col>
                   <el-col span={8} class="customer-title-top left">
-                    食材
+                    营养
                   </el-col>
                   <el-col span={8} class="customer-title-top left">
                     含量

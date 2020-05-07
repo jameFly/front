@@ -1,6 +1,5 @@
 <template>
   <div class="ingredientsManagement">
-    我是食材管理
     <baseSearch :searchData="searchData" :modelSearch="modelSearch" :searchWidth="searchWidth" />
     <baseTable
             :topButtonList="topButtonList"
@@ -26,6 +25,12 @@
             @reduceAddCustomDataList="reduceAddCustomDataList"
             @onValueChange="onValueChange"
     />
+    <foodNutritionCircle
+            :echartsNutritionData="echartsNutritionData"
+            :echartsVisible="echartsVisible"
+            :title="echartsTitle"
+            @cancelEchartsData="cancelEchartsData"
+    />
   </div>
 </template>
 
@@ -33,28 +38,62 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
+import foodNutritionCircle from './foodNutritionCircle'
 import { reNull } from "@/utils/common.js";
+import { materialAPI } from "@/api/material"
 export default {
     name: "ingredientsManagement",
     components: {
         baseSearch,
         baseTable,
-        baseModal
+        baseModal,
+        foodNutritionCircle,
     },
     data(){
         return{
             searchData: [
                 {
-                    label: "菜品名称",
+                    label: "食材名称",
                     type: "input",
-                    prop: "foodName"
+                    prop: "materialName",
+                    placeholder:"请输入食材名称"
                 },
                 {
-                    label: "食材",
+                    label: "时令",
                     type: "select",
-                    prop: "materialIds",
-                    options: [],
-                    multiple: true
+                    prop: "seasons",
+                    options: [
+                        { value: "01", label: "一月" },
+                        { value: "02", label: "二月" },
+                        { value: "03", label: "三月" },
+                        { value: "04", label: "四月" },
+                        { value: "05", label: "五月" },
+                        { value: "06", label: "六月" },
+                        { value: "07", label: "七月" },
+                        { value: "08", label: "八月" },
+                        { value: "09", label: "九月" },
+                        { value: "10", label: "十月" },
+                        { value: "11", label: "十一月" },
+                        { value: "12", label: "十二月" },
+                    ],
+                    multiple: true,
+                    placeholder:"请选择时令"
+                },
+                {
+                    label: "食材类型",
+                    type: "select",
+                    prop: "materialType",
+                    options: [
+                        { value: "鱼类", label: "鱼类" },
+                        { value: "肉类", label: "肉类" },
+                        { value: "蔬菜", label: "蔬菜" },
+                        { value: "水果", label: "水果" },
+                        { value: "谷物", label: "谷物" },
+                        { value: "海鲜", label: "海鲜" },
+                        { value: "藻类", label: "藻类" },
+                    ],
+                    placeholder:"请选择食材类型",
+                    multiple: true,
                 },
                 {
                     label: "查询",
@@ -71,8 +110,13 @@ export default {
             ],
             tableHeaders: [
                 {
-                    label: "菜品名称",
-                    prop: "foodName",
+                    label: "食材名称",
+                    prop: "materialName",
+                    align: "center"
+                },
+                {
+                    label: "食材类型",
+                    prop: "materialType",
                     align: "center"
                 },
                 {
@@ -81,18 +125,8 @@ export default {
                     align: "center"
                 },
                 {
-                    label: "克重",
-                    prop: "weight",
-                    align: "center"
-                },
-                {
-                    label: "价格(元)",
+                    label: "价格(元/kg)",
                     prop: "price",
-                    align: "center"
-                },
-                {
-                    label: "食材",
-                    prop: "material",
                     align: "center"
                 },
                 {
@@ -106,21 +140,21 @@ export default {
                     align: "center",
                     buttonList: [
                         {
+                            name: "营养详情",
+                            handleClick: this.showEchartsData
+                        },
+                        {
                             name: "编辑",
                             handleClick: this.handleEditClick
                         },
                         {
                             name: "删除",
                             handleClick: this.handleDelClick
-                        },
-                        {
-                            name: "收藏",
-                            handleClick: this.handleColClick
                         }
                     ]
                 }
             ],
-            tableData: [],
+            tableData: [{id: 1, name: "lalala"}],
             topButtonList: [
                 {
                     name: "新增",
@@ -128,24 +162,24 @@ export default {
                 }
             ],
             modelSearch: {},
-            total: 2, //数据总条数
+            total: 0, //数据总条数
             searchWidth: 360,
 
-            modalTitle: "新增菜品",
+            modalTitle: "新增食材",
             dialogVisible: false,
             addData: [
                 {
-                    label: "菜品id",
+                    label: "食材id",
                     type: "input",
                     prop: "id",
                     hidden: true,
                     message: "必填项不能为空"
                 },
                 {
-                    label: "菜品名",
+                    label: "食材名称",
                     type: "input",
-                    prop: "foodName",
-                    placeholder: "请输入菜品名",
+                    prop: "materialName",
+                    placeholder: "请输入食材名称",
                     inRule: true,
                     message: "必填项不能为空"
                 },
@@ -157,10 +191,35 @@ export default {
                     inRule: true,
                     message: "必填项不能为空",
                     options: [
-                        { value: 1, label: "春季" },
-                        { value: 2, label: "夏季" },
-                        { value: 3, label: "秋季" },
-                        { value: 4, label: "冬季" }
+                        { value: "01", label: "一月" },
+                        { value: "02", label: "二月" },
+                        { value: "03", label: "三月" },
+                        { value: "04", label: "四月" },
+                        { value: "05", label: "五月" },
+                        { value: "06", label: "六月" },
+                        { value: "07", label: "七月" },
+                        { value: "08", label: "八月" },
+                        { value: "09", label: "九月" },
+                        { value: "10", label: "十月" },
+                        { value: "11", label: "十一月" },
+                        { value: "12", label: "十二月" },
+                    ]
+                },
+                {
+                    label: "食材类型",
+                    type: "select",
+                    prop: "materialType",
+                    placeholder: "请输入食材类型",
+                    inRule: true,
+                    message: "必填项不能为空",
+                    options: [
+                        { value: "鱼类", label: "鱼类" },
+                        { value: "肉类", label: "肉类" },
+                        { value: "蔬菜", label: "蔬菜" },
+                        { value: "水果", label: "水果" },
+                        { value: "谷物", label: "谷物" },
+                        { value: "海鲜", label: "海鲜" },
+                        { value: "藻类", label: "藻类" },
                     ]
                 },
                 {
@@ -171,71 +230,59 @@ export default {
                     inRule: true,
                     message: "必填项不能为空"
                 },
-                {
-                    label: "菜品克重",
-                    type: "inputNumber",
-                    prop: "weight",
-                    placeholder: "请输入菜品克重,单位（克）"
-                },
-                {
-                    label: "描述",
-                    type: "inputTextarea",
-                    prop: "remark",
-                    placeholder: "请输入描述"
-                }
             ],
-            addModalData: {
-                id: 1,
-                foodName: "蔬菜",
-                seasons: [1, 2, 3],
-                price: 20.2,
-                weight: 30,
-                remark: "好"
-            },
+            addModalData: {},
             isCustomAdd: true,
-            addCustomData: [
-                {
-                    id: 1,
-                    nutrientName: 1,
-                    components: 20
-                }
-            ],
-            materialNameList: [
-                {
-                    value: 1,
-                    label: "牛肉"
-                },
-                {
-                    value: 2,
-                    label: "鸡蛋"
-                },
-                {
-                    value: 3,
-                    label: "牛肉1"
-                },
-                {
-                    value: 4,
-                    label: "牛肉2"
-                }
-            ],
+            addCustomData: [],
+            materialNameList: [],
             currentPage: 1,
             pageSize: 10,
 
             isRules: true,
-            formRef: "baseForm"
+            formRef: "baseForm",
+
+            echartsNutritionData: {},
+            echartsVisible: false,
+            echartsTitle: "营养含量详情图"
         }
     },
     methods: {
+        showEchartsData(index, row) {
+            console.log("详情")
+            materialAPI.getMaterialChart(reNull({id: row.id})).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    let data = res.data.data;
+                    this.echartsNutritionData = data ? data : {};
+                    this.echartsVisible = true;
+                    this.$nextTick(() => {
+                        this.$children[3].initPieCharts();
+                    })
+                    //获取图表数据
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
+        },
+        cancelEchartsData() {
+            this.echartsNutritionData = {};
+            this.echartsVisible = false
+        },
         handleQueryClick() {
             console.log("查询");
             this.getList();
         },
         handleRefreshClick() {
             console.log("清除");
+            this.modelSearch = {}
         },
         handleAddClick() {
             let _this = this;
-            this.modalTitle = "新增营养需求";
+            this.modalTitle = "新增食材";
             this.dialogVisible = true;
             this.addModalData = {};
             this.addCustomData = [];
@@ -245,15 +292,51 @@ export default {
         },
         handleEditClick(index, row) {
             console.log("编辑", index, row);
-            this.modalTitle = "编辑营养需求";
-            this.dialogVisible = true;
+            this.modalTitle = "编辑食材";
+            this.addModalData = {};
+            this.addCustomData = [];
+            materialAPI.getMaterialInfo(reNull({id: row.id})).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    let data = res.data.data;
+                    data.seasons = res.data.data.seasons ?  res.data.data.seasons.split(',') : [];
+                    this.addModalData = data;
+                    let componentTos = data.componentTos;
+                    componentTos.map(item => {
+                        this.addCustomData.push({
+                            nutrientName: item.typeId,
+                            components: item.weight
+                        })
+                    });
+                    this.dialogVisible = true;
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
         },
         handleDelClick(index, row) {
             console.log("删除", index, row);
+            materialAPI.deleteMaterial(reNull({ids: row.id})).then(res => {
+                console.log('res',res);
+                if (res.data.status == 0) {
+                    this.$message.success("删除成功！");
+                    this.getList(this.currentPage, this.pageSize);
+                } else {
+                    if (res.data.errorCode) {
+                        this.$message.error(res.data.errorCode);
+                    }
+                }
+            }).catch(err => {
+                console.log('err',err)
+            })
         },
-        handleColClick(index, row) {
-            console.log("收藏", index, row);
-        },
+        // handleColClick(index, row) {
+        //     console.log("收藏", index, row);
+        // },
         handlesizeChange(val) {
             this.pageSize = val;
             console.log(val);
@@ -267,19 +350,50 @@ export default {
         handleAddModalData(fields) {
             //保存
             let addModalData = { ...this.addModalData };
+            let addCustomData = [ ...this.addCustomData ];
             this.$children[2].$refs[this.formRef].validate(valid => {
                 if (valid) {
+                    console.log(this.inputRule());
                     if (this.inputRule()) {
                         //增加数据
-                        console.log(addModalData);
+                        let componentTos = [];
+                        addCustomData.map(item => {
+                            componentTos.push({
+                                typeId: item.nutrientName,
+                                weight: item.components
+                            })
+                        });
+                        // delete addModalData.seasons;
+                        // delete addModalData.weight;
+                        addModalData = {
+                            ...addModalData,
+                            seasons: addModalData.seasons && addModalData.seasons.length ? addModalData.seasons.join(',') : '',
+                            componentTos
+                        };
+                        materialAPI.editMaterial(reNull(addModalData)).then(res => {
+                            console.log('res',res)
+                            if (res.data.status == 0) {
+                                this.dialogVisible = false;
+                                this.addModalData = {};
+                                this.addCustomData = [];
+                                this.$message.success("保存成功！");
+                                this.getList();
+                            } else {
+                                if (res.data.errorCode) {
+                                    this.$message.error(res.data.errorCode);
+                                }
+                            }
+                        }).catch(err => {
+                            console.log('err',err)
+                        })
                     } else {
-                        this.$message.error("食材含量不能为空!");
+                        this.$message.error("营养及含量不能为空!");
                     }
                 }
             });
         },
         handleCancelModalData() {
-            this.modalTitle = "新增营养需求";
+            this.modalTitle = "新增食材";
             this.dialogVisible = false;
             this.addModalData = {};
             this.addCustomData = [];
@@ -295,41 +409,51 @@ export default {
             this.addCustomData[index][name] = value;
             this.disabledOpt();
         },
-        getList() {
-            this.modelSearch["materialIds"] = this.modelSearch["materialIds"].length
-                ? this.modelSearch["materialIds"].join(",")
-                : "";
+        getList(page, size) {
+            let modelSearch = {
+                ...this.modelSearch,
+                seasons:this.modelSearch["seasons"].length
+                    ? this.modelSearch["seasons"].join(",")
+                    : "",
+                materialType: this.modelSearch["materialType"].length
+                    ? this.modelSearch["materialType"].join(",")
+                    : "",
+            };
             let params = {
-                page: 1,
-                rows: 5,
-                ...this.modelSearch
+                page: page || 1,
+                rows: size || 10,
+                ...modelSearch
             };
             console.log(params);
-            /*foodAPI.getFoodList(reNull(params)).then(res => {
+            materialAPI.getMaterialList(reNull(params)).then(res => {
                 if (res.data.status == 0) {
                     this.tableData = res.data.data.rows;
+                    this.total = res.data.data.total;
                     this.tableData.forEach(ele => {
-                        console.log(ele);
-                        ele["material"] = ele["materialNames"].join(",");
-                        ele["nutrient"] = ele["nutrientNames"].join(",");
+                        console.log(111,ele);
+                        let nutrient = [];
+                        ele["componentTos"].map(item => {
+                            nutrient.push(item.typeName)
+                        });
+                        ele["nutrient"] = nutrient.length ? nutrient.join(',') : ''
                     });
                 }
-            });*/
+            });
         },
         getMaterialIdList() {
-            // 获取食材下拉框
-            /*let options = [];
-            foodAPI.getMaterialIds().then(res => {
+            // 获取营养
+            let options = [];
+            materialAPI.getMaterialIds().then(res => {
                 console.log(res);
                 if (res.data.status == 0) {
                     res.data.data.forEach(ele => {
-                        this.searchData[1].options.push({
+                        this.materialNameList.push({
                             label: ele.name,
                             value: ele.id
-                        });
+                        })
                     });
                 }
-            });*/
+            });
         },
         Init() {
             this.getList();
@@ -349,11 +473,12 @@ export default {
             });
         },
         inputRule() {
-            let res = true;
+            let res = false;
+            console.log(this.addCustomData.length);
             if (this.addCustomData && this.addCustomData.length) {
                 for (let i = 0; i < this.addCustomData.length; i++) {
-                    if (!this.addCustomData[i].components) {
-                        res = false;
+                    if (this.addCustomData[i].components && this.addCustomData[i].nutrientName) {
+                        res = true;
                         break;
                     }
                 }

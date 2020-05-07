@@ -72,7 +72,7 @@ export default {
         },
         {
           index: "6",
-          title: "登出"
+          title: "退出登录"
         }
       ],
       activeIndex: "0"
