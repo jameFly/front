@@ -1,5 +1,6 @@
 <template>
   <div class="ingredientsManagement">
+    <baseBar :title="barTitle" />
     <baseSearch :searchData="searchData" :modelSearch="modelSearch" :searchWidth="searchWidth" />
     <baseTable
             :topButtonList="topButtonList"
@@ -41,6 +42,7 @@ import baseModal from "./baseModal";
 import foodNutritionCircle from './foodNutritionCircle'
 import { reNull } from "@/utils/common.js";
 import { materialAPI } from "@/api/material"
+import baseBar from "@/components/baseBar"
 export default {
     name: "ingredientsManagement",
     components: {
@@ -48,9 +50,11 @@ export default {
         baseTable,
         baseModal,
         foodNutritionCircle,
+        baseBar,
     },
     data(){
         return{
+            barTitle: "食材管理",
             searchData: [
                 {
                     label: "食材名称",

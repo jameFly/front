@@ -1,5 +1,6 @@
 <template>
   <div class="dishManagement">
+    <baseBar :title="barTitle" />
     <baseSearch :searchData="searchData" :modelSearch="modelSearch" :searchWidth="searchWidth" />
     <baseTable
       :topButtonList="topButtonList"
@@ -49,6 +50,7 @@
 import baseSearch from "@/components/baseSearch";
 import baseTable from "@/components/baseTable";
 import baseModal from "./baseModal";
+import baseBar from "@/components/baseBar"
 import showCollection from './showCollection'
 import foodNutritionCircle from './foodNutritionCircle'
 import { materialAPI } from "@/api/material";
@@ -62,10 +64,12 @@ export default {
     baseTable,
     baseModal,
     showCollection,
-    foodNutritionCircle
+    foodNutritionCircle,
+    baseBar,
   },
   data() {
     return {
+      barTitle: "菜单管理",
       searchData: [
         {
           label: "菜品名称",

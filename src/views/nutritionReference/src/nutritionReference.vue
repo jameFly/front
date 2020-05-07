@@ -1,5 +1,6 @@
 <template>
     <div class="nutritionReference">
+        <baseBar :title="barTitle" />
         <baseSearch :searchData="searchData" :modelSearch="modelSearch"/>
         <baseTable
                 :tableHeaders="tableHeaders"
@@ -15,15 +16,17 @@
     import baseSearch from "@/components/baseSearch";
     import baseTable from "@/components/baseTable";
     import {nutritionStandardAPI} from "@/api/nutritionStandard";
-
+    import baseBar from "@/components/baseBar"
     export default {
         name: "nutritionReference",
         components: {
             baseSearch,
-            baseTable
+            baseTable,
+            baseBar,
         },
         data() {
             return {
+                barTitle: "营养参考",
                 searchData: [
                     {
                         label: "名称",

@@ -1,5 +1,6 @@
 <template>
     <div class="foodConflict">
+        <baseBar :title="barTitle" />
         <baseSearch :searchData="searchData" :modelSearch="modelSearch"/>
         <baseTable
                 :topButtonList="topButtonList"
@@ -26,6 +27,7 @@
     import baseSearch from "@/components/baseSearch";
     import baseTable from "@/components/baseTable";
     import {foodConflictAPI} from "@/api/foodConflict";
+    import baseBar from "@/components/baseBar"
     import baseModal from "./baseModal";
     import { reNull } from "@/utils/common.js";
     export default {
@@ -34,9 +36,11 @@
             baseSearch,
             baseTable,
             baseModal,
+            baseBar,
         },
         data() {
             return {
+                barTitle: "食物冲突",
                 searchData: [
                     {
                         label: "食物名称",

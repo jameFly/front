@@ -1,5 +1,6 @@
 <template>
   <div class="nutritionDemand">
+    <baseBar :title="barTitle" />
     <baseSearch :searchData="searchData" :modelSearch="modelSearch" :searchWidth="searchWidth" />
     <baseTable
             :topButtonList="topButtonList"
@@ -47,16 +48,19 @@ import showDetail from "./showDetail"
 import { nutritionalNeedAPI } from "@/api/nutritionNeed";
 import { materialAPI } from "@/api/material";
 import { reNull } from "@/utils/common.js";
+import baseBar from "@/components/baseBar"
 export default {
     name: "nutritionDemand",
     components: {
         baseSearch,
         baseTable,
         baseModal,
-        showDetail
+        showDetail,
+        baseBar,
     },
     data(){
         return{
+            barTitle: "营养需求表",
             searchData: [
                 {
                     label: "营养需求",

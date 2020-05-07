@@ -6,11 +6,11 @@
             title: String,
         },
         render(h) {
-            const { title } = this.props;
+            const { title } = this;
 
             return (
                 <div class="t-title-bar">
-                    <span></span>
+                    <span class="sp-border"></span>
                     <h3>{title}</h3>
                 </div>
             )
@@ -30,12 +30,12 @@
         line-height: 20px;
         border: 2px;
         margin-right: 8px;
-        margin-top: 3px;
     }
     & .sp-border {
         border:  2px solid #5e7bf7;
     }
     & h3 {
+        text-align: left;
         margin-bottom: 0;
         font-size: 14px;
         font-weight: 700;
