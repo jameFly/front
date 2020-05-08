@@ -260,7 +260,7 @@ export default {
                     this.echartsNutritionData = data ? data : {};
                     this.echartsVisible = true;
                     this.$nextTick(() => {
-                        this.$children[3].initPieCharts();
+                        this.$children[4].initPieCharts();
                     })
                     //获取图表数据
                 } else {
@@ -291,7 +291,7 @@ export default {
             this.addModalData = {};
             this.addCustomData = [];
             this.$nextTick(() => {
-                this.$children[2].$refs[this.formRef].clearValidate(["seasons"]);
+                this.$children[3].$refs[this.formRef].clearValidate(["seasons"]);
             });
         },
         handleEditClick(index, row) {
@@ -355,7 +355,7 @@ export default {
             //保存
             let addModalData = { ...this.addModalData };
             let addCustomData = [ ...this.addCustomData ];
-            this.$children[2].$refs[this.formRef].validate(valid => {
+            this.$children[3].$refs[this.formRef].validate(valid => {
                 if (valid) {
                     console.log(this.inputRule());
                     if (this.inputRule()) {

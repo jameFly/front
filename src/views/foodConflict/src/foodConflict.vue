@@ -201,7 +201,7 @@
             handleAddModalData(fields) {
                 //保存
                 let addModalData = { ...this.addModalData };
-                this.$children[2].$refs[this.formRef].validate(valid => {
+                this.$children[3].$refs[this.formRef].validate(valid => {
                     if (valid) {
                         //增加数据
                         foodConflictAPI.editConflict(reNull(addModalData)).then(res => {

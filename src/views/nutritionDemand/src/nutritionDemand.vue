@@ -302,7 +302,7 @@ export default {
             //保存
             let addModalData = { ...this.addModalData };
             let addCustomData = [ ...this.addCustomData ];
-            this.$children[2].$refs[this.formRef].validate(valid => {
+            this.$children[3].$refs[this.formRef].validate(valid => {
                 if (valid) {
                     if (this.inputRule()) {
                         //增加数据
