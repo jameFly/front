@@ -43,7 +43,7 @@
                     <div class="t-content-box">
                         <div class="t-logo">
                             <el-image class="collapsed-logo" src={url}/>
-                            <div class="t-logo-title">菜品管理系统</div>
+                            <div class="t-logo-title">营养食谱管理系统</div>
                         </div>
                         <div class="t-form">
                             <div class="t-login-form">
