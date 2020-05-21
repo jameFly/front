@@ -1,13 +1,23 @@
 <template>
   <div class="navbar">
-    <el-menu mode="horizontal" :default-active="activeIndex" @select="routerChange">
-      <el-menu-item
-        v-for="(item, index) in menuList"
-        :key="index"
-        :index="item.index"
-        :class="[activeIndex == index ? 'actived' : '']"
-      >{{item.title}}</el-menu-item>
-    </el-menu>
+    <el-row>
+      <el-col :span="4">
+        <div class="logoInfo">
+          <span class="logo"></span>
+          <span class="name">营养食谱管理系统</span>
+        </div>
+      </el-col>
+      <el-col :span="20">
+        <el-menu mode="horizontal" :default-active="activeIndex" @select="routerChange">
+          <el-menu-item
+            v-for="(item, index) in menuList"
+            :key="index"
+            :index="item.index"
+            :class="[activeIndex == index ? 'actived' : '']"
+          >{{item.title}}</el-menu-item>
+        </el-menu>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -79,13 +89,39 @@ export default {
     };
   },
   mounted() {
-    this.activeIndex = this.menuList.filter(ele => {return ele.title == this.$route.meta.title})[0].index;
+    this.activeIndex = this.menuList.filter(ele => {
+      return ele.title == this.$route.meta.title;
+    })[0].index;
   }
 };
 </script>
 
 <style lang="scss">
 .navbar {
+  &::after {
+    clear: both;
+    content: "";
+    display: block;
+  }
+  .logoInfo {
+    background-color: #1891ff;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .logo {
+      width: 50px;
+      height: 50px;
+      background-image: url("../assets/logo.png");
+      background-size: cover;
+      display: inline-block;
+      margin: 0 10px;
+    }
+    .name {
+      color: #ffffff;
+      font-size: 24px;
+    }
+  }
   .el-menu {
     background-color: #1891ff;
     .el-menu-item {

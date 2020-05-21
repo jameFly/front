@@ -162,7 +162,8 @@ export default {
             topButtonList: [
                 {
                     name: "新增",
-                    handleClick: this.handleAddClick
+                    handleClick: this.handleAddClick,
+                    type: "primary"
                 }
             ],
             modelSearch: {},

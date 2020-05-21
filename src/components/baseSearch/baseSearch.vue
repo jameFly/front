@@ -104,6 +104,9 @@ export default {
   display: flex;
   flex-flow: wrap;
   box-sizing: border-box;
+  border-bottom: #f0f2f5 1px solid;
+  padding: 20px 0;
+  box-sizing: border-box;
   .searchInput {
     display: flex;
     align-items: center;

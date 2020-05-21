@@ -24,6 +24,7 @@
     padding: 5px 0;
     margin-top: 8px;
     margin-bottom: 8px;
+    border-bottom: #f0f2f5 1px solid;
     & span {
         float: left;
         height: 14px;

@@ -194,15 +194,17 @@ export default {
           ]
         }
       ],
-      tableData: [{id:1, foodName:"lala"}],
+      tableData: [{id:1, foodName:"lala", nutrient: "牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，"}],
       topButtonList: [
         {
           name: "新增",
-          handleClick: this.handleAddClick
+          handleClick: this.handleAddClick,
+          type: "primary"
         },
         {
           name: "收藏夹",
-          handleClick: this.showCollection
+          handleClick: this.showCollection,
+          type: "info"
         }
       ],
       modelSearch: {},

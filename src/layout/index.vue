@@ -19,7 +19,7 @@ export default {
 
 <style lang="scss">
 .main_container {
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
 }
 </style>

@@ -5,6 +5,7 @@
         v-for="(item, index) in topButtonList"
         :key="index"
         class="topBtn"
+        :type="item.type"
         @click="item.handleClick"
       >{{item.name}}</el-button>
     </div>
@@ -15,6 +16,10 @@
         'height':'54px'        
       }"
       :border="border"
+      :cell-class-name="cellName"
+      :row-style="{
+        //'height': '50px'
+      }"
     >
       <el-table-column
         v-if="hasIndex"
@@ -115,6 +120,12 @@ export default {
     },
     handlePageChange(val) {
       this.$emit("pageChange", val);
+    },
+    cellName({ row, column, rowIndex, columnIndex }) {
+      if (column["label"] == "营养成分") {
+        return "table-th";
+      }
+      console.log(row);
     }
   }
 };
@@ -126,10 +137,12 @@ export default {
   &:after {
     clear: both;
     content: "";
+    display: block;
   }
-  .topBtn {
-    float: left;
+  .btn_wrapper {
+    float: right;
     margin-bottom: 20px;
+    margin-right: 20px;
   }
   .btnItem {
     font-family: Microsoft YaHei;
@@ -154,6 +167,13 @@ export default {
   }
   .icon-manage {
     color: #386998;
+  }
+  .table-th {
+    .cell {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
 }
 </style>
