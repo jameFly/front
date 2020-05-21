@@ -283,7 +283,7 @@ export default {
         },
         handleRefreshClick() {
             console.log("清除");
-            this.modelSearch = {}
+            this.modelSearch = {"seasons":[],"materialType":[]}
         },
         handleAddClick() {
             let _this = this;

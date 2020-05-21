@@ -342,7 +342,7 @@ export default {
             if (res.data.status == 0) {
                 let data = res.data.data;
                 this.echartsFoodData = data.length ? data[0] : {};
-                this.echartsTitle = data.length ? `${data[0].name}详情图` : "详情图";
+                this.echartsTitle = data.length ? `${data[0].name}` : "详情图";
                 this.echartsNutritionData = data.length ? data[1] : {};
                 this.echartsVisible = true;
                 this.$nextTick(() => {
@@ -370,7 +370,7 @@ export default {
     },
     handleRefreshClick() {
       console.log("清除");
-      this.modelSearch = {}
+      this.modelSearch = {"seasons":[],"materialIds":[],"nutritionalIds":[]}
     },
     handleAddClick() {
       let _this = this;
