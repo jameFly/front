@@ -69,7 +69,7 @@ export default {
   },
   data() {
     return {
-      barTitle: "菜单管理",
+      barTitle: "菜品管理",
       searchData: [
         {
           label: "菜品名称",

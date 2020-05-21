@@ -1,13 +1,13 @@
 <template>
   <div class="navbar">
     <el-row>
-      <el-col :span="4">
+      <el-col :span="5">
         <div class="logoInfo">
           <span class="logo"></span>
           <span class="name">营养食谱管理系统</span>
         </div>
       </el-col>
-      <el-col :span="20">
+      <el-col :span="19">
         <el-menu mode="horizontal" :default-active="activeIndex" @select="routerChange">
           <el-menu-item
             v-for="(item, index) in menuList"
