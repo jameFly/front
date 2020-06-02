@@ -335,66 +335,66 @@ export default {
     };
   },
   methods: {
-    showEchartsData(index, row) {
+    showEchartsData(index, row) { //获取图标详情
         console.log("详情")
-        foodAPI.getFoodChart(reNull({id: row.id})).then(res => {
+        foodAPI.getFoodChart(reNull({id: row.id})).then(res => { //调用接口
             console.log('res',res);
-            if (res.data.status == 0) {
+            if (res.data.status == 0) { //状态成功则对数据进行如下操作
                 let data = res.data.data;
                 this.echartsFoodData = data.length ? data[0] : {};
                 this.echartsTitle = data.length ? `${data[0].name}` : "详情图";
                 this.echartsNutritionData = data.length ? data[1] : {};
                 this.echartsVisible = true;
-                this.$nextTick(() => {
-                    this.$children[5].initCharts();
+                this.$nextTick(() => {//$nextTick 是在下次 DOM 更新循环结束之后执行延迟回调，在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
+                    this.$children[5].initCharts();//this.$children表示子组件数组
                     this.$children[5].initPieCharts();
                 })
                 //获取图表数据
             } else {
-                if (res.data.errorCode) {
+                if (res.data.errorCode) { //状态失败则显示错提示
                     this.$message.error(res.data.errorCode);
                 }
             }
-        }).catch(err => {
+        }).catch(err => { //处理promise过程的错误
             console.log('err',err)
         })
     },
-    cancelEchartsData() {
+    cancelEchartsData() { //关闭图标详情
         this.echartsFoodData = {};
         this.echartsNutritionData = {};
         this.echartsVisible = false
     },
-    handleQueryClick() {
+    handleQueryClick() { //查询列表
       console.log("查询");
       this.getList();
     },
-    handleRefreshClick() {
+    handleRefreshClick() { //清楚搜索框信息
       console.log("清除");
       this.modelSearch = {"seasons":[],"materialIds":[],"nutritionalIds":[]}
     },
-    handleAddClick() {
+    handleAddClick() { //新增菜单
       let _this = this;
       this.modalTitle = "新增菜品";
       this.dialogVisible = true;
       this.addModalData = {};
       this.addCustomData = [];
       this.$nextTick(() => {
-        this.$children[3].$refs[this.formRef].clearValidate(["seasons"]);
+        this.$children[3].$refs[this.formRef].clearValidate(["seasons"]); //由于数据格式问题 先清除seasons输入框的数据校验
       });
     },
-    handleEditClick(index, row) {
+    handleEditClick(index, row) { //编辑菜单
       console.log("编辑", index, row);
         this.modalTitle = "编辑菜品";
         this.addModalData = {};
         this.addCustomData = [];
-        foodAPI.getFoodInfo(reNull({id: row.id})).then(res => {
+        foodAPI.getFoodInfo(reNull({id: row.id})).then(res => { //调用接口 获取菜单详情
             console.log('res',res);
-            if (res.data.status == 0) {
+            if (res.data.status == 0) { //状态成功处理相关数据
                 let data = res.data.data;
                 data.seasons = res.data.data.seasons ?  res.data.data.seasons.split(',') : [];
                 this.addModalData = data;
                 let componentTos = data.componentTos;
-                componentTos.map(item => {
+                componentTos.map(item => { //遍历数组 重新调整自定义营养成分输入的参数设置
                     this.addCustomData.push({
                         nutrientName: item.typeId,
                         components: item.weight
@@ -402,7 +402,7 @@ export default {
                 });
                 this.dialogVisible = true;
             } else {
-                if (res.data.errorCode) {
+                if (res.data.errorCode) { //状态失败 返回错误信息
                     this.$message.error(res.data.errorCode);
                 }
             }
@@ -410,15 +410,15 @@ export default {
             console.log('err',err)
         })
     },
-    handleDelClick(index, row) {
+    handleDelClick(index, row) { //删除列表
       console.log("删除", index, row);
-        foodAPI.deleteFood(reNull({ids: row.id})).then(res => {
+        foodAPI.deleteFood(reNull({ids: row.id})).then(res => { //调用接口
             console.log('res',res);
-            if (res.data.status == 0) {
+            if (res.data.status == 0) { //状态成功，提示
                 this.$message.success("删除成功！");
                 this.getList(this.currentPage, this.pageSize);
             } else {
-                if (res.data.errorCode) {
+                if (res.data.errorCode) { //状态失败，提示
                     this.$message.error(res.data.errorCode);
                 }
             }
@@ -426,7 +426,7 @@ export default {
             console.log('err',err)
         })
     },
-    handleColClick(index, row) {
+    handleColClick(index, row) { //收藏菜单 流程同删除
       console.log("收藏", index, row);
         foodAPI.collectFood(reNull({ids: row.id, status: true})).then(res => {
             console.log('res',res);
@@ -442,40 +442,40 @@ export default {
             console.log('err',err)
         })
     },
-    handlesizeChange(val) {
+    handlesizeChange(val) { //列表切换每页展示条数
       this.pageSize = val;
       console.log(val);
       this.getList(this.currentPage, val, "handlesizeChange");
     },
-    handlepageChange(val) {
+    handlepageChange(val) { //列表切换第几页
       this.currentPage = val;
       console.log(val);
       this.getList(val, this.pageSize, "handlepageChange");
     },
-    handleAddModalData() {
+    handleAddModalData() { //保存数据
       //保存
-      let addModalData = { ...this.addModalData };
-      let addCustomData = [ ...this.addCustomData ];
-      this.$children[3].$refs[this.formRef].validate(valid => {
+      let addModalData = { ...this.addModalData }; //获取from表单数据
+      let addCustomData = [ ...this.addCustomData ]; //获取自定义营养成分数据
+      this.$children[3].$refs[this.formRef].validate(valid => { //表单验证
           if (valid) {
           if (this.inputRule()) {
             //增加数据
             let componentTos = [];
-            addCustomData.map(item => {
+            addCustomData.map(item => { //处理自定义营养成分数据
                   componentTos.push({
                       typeId: item.nutrientName,
                       weight: item.components
                   })
             });
-            delete addModalData.weight;
+            delete addModalData.weight; //删除后端不需要接受的字段
             delete addModalData.seasons;
-            addModalData = {
+            addModalData = { //从新封装后端需要的数据格式
                 ...addModalData,
                 componentTos
             };
-            foodAPI.editFood(reNull(addModalData)).then(res => {
+            foodAPI.editFood(reNull(addModalData)).then(res => { //调用接口
                 console.log('res',res)
-                if (res.data.status == 0) {
+                if (res.data.status == 0) { //保存成功数据处理
                     this.dialogVisible = false;
                     this.addModalData = {};
                     this.addCustomData = [];
@@ -495,42 +495,42 @@ export default {
         }
       });
     },
-    handleCancelModalData() {
+    handleCancelModalData() { //新增菜品
       this.modalTitle = "新增菜品";
       this.dialogVisible = false;
       this.addModalData = {};
       this.addCustomData = [];
     },
-    handleAddCustomDataList() {
+    handleAddCustomDataList() { //新增自定义营养成分输入框
       this.addCustomData.push({ id: `add-${Date.now()}` });
     },
-    reduceAddCustomDataList(index) {
+    reduceAddCustomDataList(index) { //删除自定义营养成分输入框
       this.addCustomData.splice(index, 1);
       this.disabledOpt();
     },
-    onValueChange({ value, index, name }) {
+    onValueChange({ value, index, name }) { //修改/编辑自定义营养成分输入框内容
       this.addCustomData[index][name] = value;
       this.disabledOpt();
     },
-    showCollection() {
+    showCollection() { //显示收藏框
         this.isShowCollection = true;
         this.getCollectionList()
     },
-    handleCancelChange() {
+    handleCancelChange() { //关闭收藏框
         this.isShowCollection = false
     },
-    handleCollectSizeChange(val) {
+    handleCollectSizeChange(val) { //修改收藏框列表每页展示条数
         this.collectPageSize = val;
         console.log(val);
         this.getCollectionList(this.collectCurrentPage, val, "handlesizeChange");
     },
-    handleCollectPageChange(val) {
+    handleCollectPageChange(val) { //修改收藏框列表页数
         this.collectCurrentPage = val;
         console.log(val);
         this.getCollectionList(val, this.collectPageSize, "handlepageChange");
     },
-    getList(page, size) {
-      let modelSearch = {
+    getList(page, size) { //获取列表数据
+      let modelSearch = { //处理搜索条件数据
           ...this.modelSearch,
           materialIds:this.modelSearch["materialIds"].length
               ? this.modelSearch["materialIds"].join(",")
@@ -542,30 +542,30 @@ export default {
               ? this.modelSearch["seasons"].join(",")
               : "",
       };
-      if (modelSearch.priceFrom && modelSearch.priceTo) {
+      if (modelSearch.priceFrom && modelSearch.priceTo) { //校验价格范围，最低价必须小于最高价
           if (modelSearch.priceFrom >= modelSearch.priceTo) {
               this.$message.error("最低价格必须小于最高价格");
               return;
           }
       }
-      let params = {
+      let params = { //封装搜索条件
         page: page || 1,
         rows: size || 10,
         ...modelSearch
       };
-      foodAPI.getFoodList(reNull(params)).then(res => {
-        if (res.data.status == 0) {
+      foodAPI.getFoodList(reNull(params)).then(res => { //调用接口
+        if (res.data.status == 0) { //处理数据
           this.tableData = res.data.data.rows;
           this.total = res.data.data.total;
           this.tableData.forEach(ele => {
             console.log(ele);
-            ele["material"] = ele["materialNames"].join(",");
+            ele["material"] = ele["materialNames"].join(","); //把数组变成字符串，便于值的展示
             ele["nutrient"] = ele["nutrientNames"].join(",");
           });
         }
       });
     },
-    getCollectionList(page, size){
+    getCollectionList(page, size){ //获取收藏列表数据 具体同上
         let params = {
             page: page || 1,
             rows: size || 10,
@@ -591,7 +591,7 @@ export default {
             }
         });
     },
-    cancelCollect(index, row) {
+    cancelCollect(index, row) { //取消菜品搜藏
         console.log("取消收藏");
         foodAPI.collectFood({ids: row.id, status: false}).then(res => {
             console.log('res',res);
@@ -607,13 +607,12 @@ export default {
             console.log('err',err)
         })
     },
-    getMaterialIdList() {
-      // 获取食材下拉框
+    getMaterialIdList() { //获取食材下拉框
       let options = [];
       foodAPI.getMaterialIds().then(res => {
         console.log(res);
         if (res.data.status == 0) {
-          res.data.data.forEach(ele => {
+          res.data.data.forEach(ele => { //处理数据 重新封装成组件可展示数据格式
             this.searchData[1].options.push({
               label: ele.name,
               value: ele.id
@@ -627,10 +626,10 @@ export default {
       });
     },
     getMaterialIds(){
-        materialAPI.getMaterialIds().then(res => {
+        materialAPI.getMaterialIds().then(res => { //获取食材下拉框
             console.log(res);
             if (res.data.status == 0) {
-                res.data.data.forEach(ele => {
+                res.data.data.forEach(ele => { //添加至搜索下拉框选项内容
                     this.searchData[3].options.push({
                         label: ele.name,
                         value: ele.id
@@ -644,7 +643,7 @@ export default {
       this.getMaterialIdList();
       this.getMaterialIds();
     },
-    disabledOpt() {
+    disabledOpt() { //校验自定义输入框内容
       this.materialNameList.forEach(ele => {
         this.$delete(ele, "disabled");
       });
@@ -657,7 +656,7 @@ export default {
         }
       });
     },
-    inputRule() {
+    inputRule() { //校验输入信息
       let res = false;
       if (this.addCustomData && this.addCustomData.length) {
         for (let i = 0; i < this.addCustomData.length; i++) {
