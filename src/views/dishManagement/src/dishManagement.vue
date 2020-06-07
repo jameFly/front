@@ -194,7 +194,7 @@ export default {
           ]
         }
       ],
-      // tableData: [{id:1, foodName:"lala", nutrient: "牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，"}],
+      tableData: [],
       topButtonList: [
         {
           name: "新增",
@@ -532,13 +532,13 @@ export default {
     getList(page, size) { //获取列表数据
       let modelSearch = { //处理搜索条件数据
           ...this.modelSearch,
-          materialIds:this.modelSearch["materialIds"].length
+          materialIds:Array.isArray(this.modelSearch["materialIds"])
               ? this.modelSearch["materialIds"].join(",")
               : "",
-          nutritionalIds:this.modelSearch["nutritionalIds"].length
+          nutritionalIds:Array.isArray(this.modelSearch["nutritionalIds"])
               ? this.modelSearch["nutritionalIds"].join(",")
               : "",
-          seasons:this.modelSearch["seasons"].length
+          seasons:Array.isArray(this.modelSearch["seasons"])
               ? this.modelSearch["seasons"].join(",")
               : "",
       };
