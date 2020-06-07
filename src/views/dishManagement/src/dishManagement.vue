@@ -534,13 +534,13 @@ export default {
           ...this.modelSearch,
           materialIds:Array.isArray(this.modelSearch["materialIds"])
               ? this.modelSearch["materialIds"].join(",")
-              : "",
+              : this.modelSearch["materialIds"],
           nutritionalIds:Array.isArray(this.modelSearch["nutritionalIds"])
               ? this.modelSearch["nutritionalIds"].join(",")
-              : "",
+              : this.modelSearch["nutritionalIds"],
           seasons:Array.isArray(this.modelSearch["seasons"])
               ? this.modelSearch["seasons"].join(",")
-              : "",
+              : this.modelSearch["seasons"],
       };
       if (modelSearch.priceFrom && modelSearch.priceTo) { //校验价格范围，最低价必须小于最高价
           if (modelSearch.priceFrom >= modelSearch.priceTo) {
