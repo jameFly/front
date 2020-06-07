@@ -2,7 +2,7 @@
 <script>
 export default {
   name: "baseModal",
-  props: {
+  props: {// 组件声明，声明后可被引用，子组件引用父组件
     addData: {
       //搜索栏数据 格式：[{label: "xxx", type: "input || select || ...", prop: "保存的字段名"}]
       type: Array,
@@ -49,7 +49,7 @@ export default {
         icon
       } = item;
       let isDisabled = (prop === 'weight' || prop === 'seasons' ) && true;
-      if (item.type === "input") {
+      if (item.type === "input") { // 输入框
         return (
           <el-form-item label={label} hidden={hidden} prop={prop}>
             <el-input
@@ -58,7 +58,7 @@ export default {
             ></el-input>
           </el-form-item>
         );
-      } else if (item.type === "inputNumber") {
+      } else if (item.type === "inputNumber") {// 数字输入框
         return (
           <el-form-item label={label} hidden={hidden} prop={prop}>
             <el-input-number
@@ -71,7 +71,7 @@ export default {
             ></el-input-number>
           </el-form-item>
         );
-      } else if (item.type === "inputTextarea") {
+      } else if (item.type === "inputTextarea") {// 文本输入框
         return (
           <el-form-item label={label} hidden={hidden} prop={prop}>
             <el-input
@@ -83,7 +83,7 @@ export default {
             ></el-input>
           </el-form-item>
         );
-      } else if (item.type === "select") {
+      } else if (item.type === "select") { // 选择框
         return (
           <el-form-item label={label} prop={prop}>
             <el-select v-model={addModalData[prop]} placeholder={placeholder}>
@@ -100,7 +100,7 @@ export default {
             </el-select>
           </el-form-item>
         );
-      } else if (item.type === "selectMultiple") {
+      } else if (item.type === "selectMultiple") { // 多选框
         return (
           <el-form-item label={label} prop={prop}>
             <el-select
@@ -124,7 +124,7 @@ export default {
         );
       }
     },
-    renderCustomFormItem({ item, index, len, reduce, onValueChange }) {
+    renderCustomFormItem({ item, index, len, reduce, onValueChange }) { //自定义添加输入框
       const { materialNameList } = this;
       const isShowReduce = len > 1;
       const { id, nutrientName, components } = item;
@@ -172,7 +172,7 @@ export default {
         </el-row>
       );
     },
-    onOk() {
+    onOk() {// 添加框的确定传入的字段
       let fields = [
         { label: "foodName", name: "菜品名" },
         { label: "seasons", name: "时令" },
@@ -182,7 +182,7 @@ export default {
       //let val = "添加菜品";
       this.$emit("addModalData", fields);
     },
-    onCancel() {
+    onCancel() { //取消
       this.$emit("cancelModalData");
     },
     addCustomDataList() {
@@ -195,7 +195,7 @@ export default {
       this.$emit("onValueChange", { value, index, name });
     }
   },
-  render(h) {
+  render(h) { // 添加菜品时弹框的渲染界面
     const {
       addData,
       renderFormItem,

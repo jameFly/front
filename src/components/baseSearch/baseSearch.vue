@@ -1,16 +1,16 @@
 <script>
-export default {
+export default {// 封装的搜索栏模块，可以有多个搜索框
   name: "baseSearch",
   props: {
     searchData: { //搜索栏数据 格式：[{label: "xxx", type: "input || select || ...", prop: "保存的字段名"}]
       type: Array,
-      default: () => []
+      default: () => []//默认值为空数组
     },
     modelSearch: {
       type: Object,
       default: () => {}
     },
-    searchWidth: {
+    searchWidth: {//搜索栏宽度
       type: Number,
       default: 400
     }
@@ -28,7 +28,7 @@ export default {
         options,
         icon
       } = item;
-      if (item.type === "input") {
+      if (item.type === "input") { // 输入框
         return (
           <div class="searchInput" style={{ width: searchWidth + "px" }}>
             <span domPropsInnerHTML={label}></span>
@@ -38,7 +38,7 @@ export default {
             ></el-input>
           </div>
         );
-      }else if (item.type === "inputNumber") {
+      }else if (item.type === "inputNumber") { //数字输入框
           return (
               <div class="searchInput" style={{width: searchWidth + "px"}}>
                   <span domPropsInnerHTML={label}></span>
@@ -51,21 +51,21 @@ export default {
                   ></el-input-number>
               </div>
           );
-      } else if (item.type === "button" && item.label == "查询") {
+      } else if (item.type === "button" && item.label == "查询") { //查询按钮
         return (
           <div class="searchBtn mr16" on-click={e => handleClick(e)}>
             <i class={icon}></i>
             <span>{label}</span>
           </div>
         );
-      } else if (item.type === "button" && item.label == "清除") {
+      } else if (item.type === "button" && item.label == "清除") { //清楚按钮
         return (
           <div class="searchBtn refreshBtn" on-click={e => handleClick(e)}>
             <i class={icon}></i>
             <span>{label}</span>
           </div>
         );
-      } else if (item.type === "select") {
+      } else if (item.type === "select") { //选择框
         return (
           <div class="searchInput" style={{ width: searchWidth + "px" }}>
             <span domPropsInnerHTML={label}></span>

@@ -25,7 +25,7 @@
 export default {
   name: "navbar",
   methods: {
-    routerChange(key, path) {
+    routerChange(key, path) {//路由选择，跳转相应界面
       switch (key) {
         case "0":
           this.$router.push({ path: "/dishManagement" }).catch(err => {});

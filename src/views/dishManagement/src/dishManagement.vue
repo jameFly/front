@@ -69,21 +69,21 @@ export default {
   },
   data() {
     return {
-      barTitle: "菜品管理",
+      barTitle: "菜品管理",//界面中的小标题(libowen)
       searchData: [
         {
           label: "菜品名称",
-          type: "input",
+          type: "input",// 搜索框类型，输入框
           prop: "foodName",
-          placeholder:"请输入菜品名称"
+          placeholder:"请输入菜品名称"//搜索栏的提示
         },
         {
           label: "食材",
-          type: "select",
+          type: "select",// 选择框
           prop: "materialIds",
           placeholder:"请选择食材",
-          options: [],
-          multiple: true
+          options: [],// 下拉框内容，数组，从接口获得
+          multiple: true //是否是多选框
         },
         {
             label: "时令",
@@ -194,7 +194,7 @@ export default {
           ]
         }
       ],
-      tableData: [{id:1, foodName:"lala", nutrient: "牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，"}],
+      // tableData: [{id:1, foodName:"lala", nutrient: "牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，牛肉，"}],
       topButtonList: [
         {
           name: "新增",
