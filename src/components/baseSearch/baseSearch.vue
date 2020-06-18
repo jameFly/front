@@ -65,7 +65,7 @@ export default {// 封装的搜索栏模块，可以有多个搜索框
             <span>{label}</span>
           </div>
         );
-      } else if (item.type === "select") { //选择框
+      } else if (item.type === "select") { //选择框(filterable可搜索选择，放placeholder前面)
         return (
           <div class="searchInput" style={{ width: searchWidth + "px" }}>
             <span domPropsInnerHTML={label}></span>

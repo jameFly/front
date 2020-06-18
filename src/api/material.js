@@ -39,7 +39,7 @@ export const materialAPI = {
         })
     },
 
-    getMaterialIds(){ // 营养类型下拉框
+    getNutritionIds(){ // 营养类型下拉框
         return axios({
             url:baseUrl + '/nutritional/nutrient_pull_down_list',
             method:"get",

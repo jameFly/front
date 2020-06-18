@@ -18,7 +18,7 @@ export default {
     }
   },
   methods: {
-    initCharts() {
+    initCharts() {//食材柱状图
       const { nameList = [], contentList = [] } = this.echartsFoodData;
       let myChart = this.$echarts.init(this.$refs.chart);
       console.log(this.$refs.chart);
@@ -45,7 +45,7 @@ export default {
     onCancel() {
       this.$emit("cancelEchartsData");
     },
-    initPieCharts() {
+    initPieCharts() {//营养饼状图
         const { nameList = [], contentList = [] } = this.echartsNutritionData;
         let data = [];
         let i;
@@ -90,7 +90,7 @@ export default {
         })
     }
   },
-  render(h) {
+  render(h) { //可调整图的大小
     const { title, echartsVisible, onCancel } = this;
     return (
       <div className="foodNutritionCircle">
